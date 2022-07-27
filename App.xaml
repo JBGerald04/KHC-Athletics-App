@@ -1,0 +1,10 @@
+﻿<Application x:Class="KHC_Athletics_and_House_Points.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:KHC_Athletics_and_House_Points"
+             StartupUri="Initialise.xaml">
+    
+    <Application.Resources>
+         
+    </Application.Resources>
+</Application>
