@@ -30,11 +30,12 @@
 
         <FlowDocumentScrollViewer Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="4">
             <FlowDocument>
-                <Table Name="tblstudents">
+                <Table Name="tblstudents" BorderBrush="Black" BorderThickness="1">
                     <TableRowGroup>
                         <TableRow>
                             <TableCell>
                                 <Paragraph>
+                                    <TextBlock Text="ID"/>
                                     <TextBlock Text="ID" />
                                 </Paragraph>
                             </TableCell>

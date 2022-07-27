@@ -2,6 +2,7 @@
 using System.Windows;
 using MySql.Data.MySqlClient;
 using System.IO;
+using System.Collections.Generic;
 
 namespace KHC_Athletics_and_House_Points
 {
@@ -9,13 +10,28 @@ namespace KHC_Athletics_and_House_Points
     {
         static MySqlConnection connection;
         public static bool connected = false;
+        public static List<Students> student = new List<Students>();
 
 
+        public class Students
+        {
+            // Data variables for use throughout the project with regards to students
+            public int id;
+            public string firstname;
+            public string lastname;
+            public string birthday;
+            public int age;
+            public string gender;
+            public int house_id;
+        }
+
+
+        // Establish a connection with database
         public static void Connect()
         {
             try
             {
-                string constring = "SERVER=" + Program.mysql_server + ";" + "DATABASE=" + Program.mysql_database + ";" + "UID=" + Program.mysql_username + ";" + "PASSWORD=" + Program.mysql_password + ";";
+                string constring = "SERVER=" + Program.mysql_server + ";" + "MySql=" + Program.mysql_database + ";" + "UID=" + Program.mysql_username + ";" + "PASSWORD=" + Program.mysql_password + ";";
                 connection = new MySqlConnection(constring);
                 connection.Open();
                 connected = true;
@@ -27,6 +43,8 @@ namespace KHC_Athletics_and_House_Points
             }
         }
 
+
+        // House Points
 
         public static void SyncHouseData()
         {
@@ -42,27 +60,6 @@ namespace KHC_Athletics_and_House_Points
         }
 
 
-        public static void SyncStudents()
-        {
-            if (connected == true)
-            {
-                string query = "SELECT * FROM students";
-                MySqlCommand cmd = new MySqlCommand(query, connection);
-                MySqlDataReader reader = cmd.ExecuteReader();
-                string id;
-                string houseid;
-                while (reader.Read())
-                {
-                    id = $"{reader["id"]}";
-                    houseid = $"{reader["house_id"]}";
-                    Database.student.Add(new Database.Students { id = int.Parse(id), firstname = $"{reader["firstname"]}", lastname = $"{reader["lastname"]}", birthday = $"{reader["birthday"]}", age = Database.CalculateAge(DateTime.Parse($"{reader["birthday"]}")), gender = $"{reader["gender"]}", house_id = int.Parse(houseid) });
-                }
-                cmd.Dispose();
-                reader.Close();
-            }
-        }
-
-
         public static void AddHousePoints(int index, int points)
         {
             if (connected == true)
@@ -74,39 +71,42 @@ namespace KHC_Athletics_and_House_Points
         }
 
 
+
+
+        // Students
+
+        public static void SyncStudents()
+        {
+            if (connected == true)
+            {
+                for (int i = 0; i < ; i++)
+                {
+                    string query = "UPDATE houses SET house_name='" + Sentral.houseData[i].house_name + "',house_colour='" + Sentral.houseData[i].house_colour + "',house_points='" + Sentral.houseData[i].house_points + "',house_sentralid='" + Sentral.houseData[i].house_sentralid + "' WHERE id='" + (i + 1) + "';";
+                    MySqlCommand cmd = new MySqlCommand(query, connection);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+
         public static void AddStudent(int index)
         {
             if (connected == true)
             {
-                string query = "SELECT id FROM students WHERE firstname='" + Database.newStudent[index].firstname + "' AND lastname='" + Database.newStudent[index].lastname + "' AND birthday='" + Database.newStudent[index].birthday + "' AND gender='" + Database.newStudent[index].gender + "' AND house_id='" + Database.newStudent[index].house_id + "'";
+                string query = "SELECT id FROM students WHERE firstname='" + student[index].firstname + "' AND lastname='" + student[index].lastname + "' AND birthday='" + student[index].birthday + "' AND gender='" + student[index].gender + "' AND house_id='" + student[index].house_id + "'";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 MySqlDataReader reader = cmd.ExecuteReader();
+                cmd.Dispose();
+                reader.Close();
 
-                if (reader.HasRows)
-                {
-                    MessageBox.Show("This student already exists in the database.");
-                    cmd.Dispose();
-                    reader.Close();
-                }
+                if (reader.HasRows) { MessageBox.Show("This student already exists in the database."); }
                 else
                 {
-                    cmd.Dispose();
-                    reader.Close();
-                    query = $"INSERT INTO students (firstname, lastname, birthday, gender, house_id) VALUES ('{Database.newStudent[index].firstname}', '{Database.newStudent[index].lastname}', '{Database.newStudent[index].birthday}', '{Database.newStudent[index].gender}', {Database.newStudent[index].house_id})";
+                    query = $"INSERT INTO students (firstname, lastname, birthday, gender, house_id) VALUES ('{student[index].firstname}', '{student[index].lastname}', '{student[index].birthday}', '{student[index].gender}', {student[index].house_id})";
                     cmd = new MySqlCommand(query, connection);
                     cmd.ExecuteNonQuery();
-
                     cmd.Dispose();
                     reader.Close();
-                    query = "SELECT * FROM students WHERE firstname='" + Database.newStudent[index].firstname + "' AND lastname='" + Database.newStudent[index].lastname + "' AND birthday='" + Database.newStudent[index].birthday + "' AND gender='" + Database.newStudent[index].gender + "' AND house_id='" + Database.newStudent[index].house_id + "'";
-                    cmd = new MySqlCommand(query, connection);
-                    reader = cmd.ExecuteReader();
-
-                    while (reader.Read())
-                    {
-                        string id = $"{reader["id"]}";
-                        Database.student.Add(new Database.Students { id = int.Parse(id), firstname = Database.newStudent[index].firstname, lastname = Database.newStudent[index].lastname, birthday = Database.newStudent[index].birthday, age = Database.CalculateAge(DateTime.Parse(Database.newStudent[index].birthday)), gender = Database.newStudent[index].gender, house_id = Database.newStudent[index].house_id });
-                    }
                     MessageBox.Show("Successfully added student");
                 }
             }
@@ -117,13 +117,46 @@ namespace KHC_Athletics_and_House_Points
         {
             if (connected == true)
             {
-                string query = "UPDATE students SET firstname='" + Database.newStudent[0].firstname + "', lastname='" + Database.newStudent[0].lastname + "', birthday='" + Database.newStudent[0].birthday + "', gender='" + Database.newStudent[0].gender + "',house_id='" + Database.newStudent[0].house_id + "' WHERE  id='" + index + "';";
+                string query = "UPDATE students SET firstname='" + student[0].firstname + "', lastname='" + student[0].lastname + "', birthday='" + student[0].birthday + "', gender='" + student[0].gender + "',house_id='" + student[0].house_id + "' WHERE  id='" + index + "';";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.ExecuteNonQuery();
                 MessageBox.Show("Successfully updated student");
             }
         }
 
+
+        public static int CalculateAge(DateTime dateOfBirth)
+        {
+            int age;
+            age = DateTime.Now.Year - dateOfBirth.Year;
+            if (DateTime.Now.DayOfYear < dateOfBirth.DayOfYear)
+                age = age - 1;
+            return age;
+        }
+
+
+
+
+
+        // Results
+
+        public static void ResultsRequest(string event_name, int age, string gender)
+        {
+            if (connected == true)
+            {
+                //string query = "SELECT * FROM students WHERE age='" + age + "',gender='" + gender
+            }
+        }
+
+
+
+
+
+
+
+
+
+        // Misc
 
         public static void GenerateReport()
         {

@@ -20,7 +20,7 @@ namespace KHC_Athletics_and_House_Points
         int[] data_birthdayyear = { 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022 };
         string[] data_gender = { "Male", "Female", "Not Specified" };
         string[] data_house = { Sentral.houseData[0].house_name, Sentral.houseData[1].house_name, Sentral.houseData[2].house_name, Sentral.houseData[3].house_name };
-        int[] data_id = new int[Database.student.Count];
+        int[] data_id = new int[MySql.student.Count];
         string path;
         int count;
 
@@ -47,7 +47,7 @@ namespace KHC_Athletics_and_House_Points
             cbxstudent_gender.SelectedItem = null;
             cbxstudent_house.SelectedItem = null;
             cbxstudent_id.SelectedItem = null;
-            Database.newStudent.Clear();
+            MySql.student.Clear();
         }
 
 
@@ -63,9 +63,9 @@ namespace KHC_Athletics_and_House_Points
                 cbxstudent_birthday_year.IsEnabled = false;
                 cbxstudent_gender.IsEnabled = false;
                 cbxstudent_house.IsEnabled = false;
-                for (int i = 0; i < Database.student.Count; i++)
+                for (int i = 0; i < MySql.student.Count; i++)
                 {
-                    data_id[i] = Database.student[i].id;
+                    data_id[i] = MySql.student[i].id;
                 }
                 cbxstudent_id.ItemsSource = data_id;
                 btninsert.Visibility = Visibility.Hidden;
@@ -85,7 +85,7 @@ namespace KHC_Athletics_and_House_Points
             {
                 if (tbxstudent_firstname.Text != "" && tbxstudent_lastname.Text != "" && cbxstudent_birthday_day.SelectedItem != null && cbxstudent_birthday_month.SelectedItem != null && cbxstudent_birthday_year.SelectedItem != null && cbxstudent_gender.SelectedItem != null && cbxstudent_house.SelectedItem != null)
                 {
-                    Database.newStudent.Add(new Database.AddStudent { firstname = $"{tbxstudent_firstname.Text}", lastname = $"{tbxstudent_lastname.Text}", birthday = $"{cbxstudent_birthday_day.SelectedItem}-{cbxstudent_birthday_month.SelectedItem}-{cbxstudent_birthday_year.SelectedItem}", gender = cbxstudent_gender.SelectedItem.ToString(), house_id = (cbxstudent_house.SelectedIndex + 1) });
+                    MySql.newStudent.Add(new MySql.AddStudent { firstname = $"{tbxstudent_firstname.Text}", lastname = $"{tbxstudent_lastname.Text}", birthday = $"{cbxstudent_birthday_day.SelectedItem}-{cbxstudent_birthday_month.SelectedItem}-{cbxstudent_birthday_year.SelectedItem}", gender = cbxstudent_gender.SelectedItem.ToString(), house_id = (cbxstudent_house.SelectedIndex + 1) });
                     MySql.AddStudent(0);
                     Reset();
                 }
@@ -95,13 +95,13 @@ namespace KHC_Athletics_and_House_Points
             {
                 if (tbxstudent_firstname.Text != "" && tbxstudent_lastname.Text != "" && cbxstudent_birthday_day.SelectedItem != null && cbxstudent_birthday_month.SelectedItem != null && cbxstudent_birthday_year.SelectedItem != null && cbxstudent_gender.SelectedItem != null && cbxstudent_house.SelectedItem != null)
                 {
-                    Database.newStudent.Add(new Database.AddStudent { firstname = $"{tbxstudent_firstname.Text}", lastname = $"{tbxstudent_lastname.Text}", birthday = $"{cbxstudent_birthday_day.SelectedItem}-{cbxstudent_birthday_month.SelectedItem}-{cbxstudent_birthday_year.SelectedItem}", gender = cbxstudent_gender.SelectedItem.ToString(), house_id = (cbxstudent_house.SelectedIndex + 1) });
+                    MySql.newStudent.Add(new MySql.AddStudent { firstname = $"{tbxstudent_firstname.Text}", lastname = $"{tbxstudent_lastname.Text}", birthday = $"{cbxstudent_birthday_day.SelectedItem}-{cbxstudent_birthday_month.SelectedItem}-{cbxstudent_birthday_year.SelectedItem}", gender = cbxstudent_gender.SelectedItem.ToString(), house_id = (cbxstudent_house.SelectedIndex + 1) });
                     int i = cbxstudent_id.SelectedIndex;
-                    Database.student[i].firstname = $"{tbxstudent_firstname.Text}";
-                    Database.student[i].lastname = $"{tbxstudent_lastname.Text}";
-                    Database.student[i].birthday = $"{cbxstudent_birthday_day.SelectedItem}-{cbxstudent_birthday_month.SelectedItem}-{cbxstudent_birthday_year.SelectedItem}";
-                    Database.student[i].gender = cbxstudent_gender.SelectedItem.ToString();
-                    Database.student[i].house_id = int.Parse(cbxstudent_house.SelectedIndex.ToString() + 1);
+                    MySql.student[i].firstname = $"{tbxstudent_firstname.Text}";
+                    MySql.student[i].lastname = $"{tbxstudent_lastname.Text}";
+                    MySql.student[i].birthday = $"{cbxstudent_birthday_day.SelectedItem}-{cbxstudent_birthday_month.SelectedItem}-{cbxstudent_birthday_year.SelectedItem}";
+                    MySql.student[i].gender = cbxstudent_gender.SelectedItem.ToString();
+                    MySql.student[i].house_id = int.Parse(cbxstudent_house.SelectedIndex.ToString() + 1);
                     MySql.UpdateStudent(int.Parse(cbxstudent_id.SelectedItem.ToString()));
                     Reset();
                 }
@@ -135,7 +135,7 @@ namespace KHC_Athletics_and_House_Points
                 // Creates variables that read a line from the file and store it as a new line of data using the class 'student'
                 var line = file.ReadLine();
                 var data = line.Split(',');
-                var newline = new Database.AddStudent();
+                var newline = new MySql.Students();
 
                 newline.firstname = data[1];        // Reads the first value on the current line
                 newline.lastname = data[2];         // Reads the seccond value on the current line
@@ -144,7 +144,7 @@ namespace KHC_Athletics_and_House_Points
                 newline.house_id = int.Parse(data[5]);
 
                 // Saves all data collected to the list Students
-                Database.newStudent.Add(newline);
+                MySql.student.Add(newline);
                 count++;
             }
             file.Close();   // Closes the file, we are finished with the file
@@ -156,13 +156,13 @@ namespace KHC_Athletics_and_House_Points
             {
                 int i = int.Parse(cbxstudent_id.SelectedItem.ToString());
 
-                tbxstudent_firstname.Text = Database.student[i - 1].firstname;
-                tbxstudent_lastname.Text = Database.student[i - 1].lastname;
-                cbxstudent_birthday_day.SelectedItem = int.Parse(Database.student[i - 1].birthday.Split('-')[0]);
-                cbxstudent_birthday_month.SelectedItem = int.Parse(Database.student[i - 1].birthday.Split('-')[1]);
-                cbxstudent_birthday_year.SelectedItem = int.Parse(Database.student[i - 1].birthday.Split('-')[2]);
-                cbxstudent_gender.SelectedItem = Database.student[i - 1].gender;
-                cbxstudent_house.SelectedIndex = Database.student[i - 1].house_id - 1;
+                tbxstudent_firstname.Text = MySql.student[i - 1].firstname;
+                tbxstudent_lastname.Text = MySql.student[i - 1].lastname;
+                cbxstudent_birthday_day.SelectedItem = int.Parse(MySql.student[i - 1].birthday.Split('-')[0]);
+                cbxstudent_birthday_month.SelectedItem = int.Parse(MySql.student[i - 1].birthday.Split('-')[1]);
+                cbxstudent_birthday_year.SelectedItem = int.Parse(MySql.student[i - 1].birthday.Split('-')[2]);
+                cbxstudent_gender.SelectedItem = MySql.student[i - 1].gender;
+                cbxstudent_house.SelectedIndex = MySql.student[i - 1].house_id - 1;
                 tbxstudent_firstname.IsEnabled = true;
                 tbxstudent_lastname.IsEnabled = true;
                 cbxstudent_birthday_day.IsEnabled = true;

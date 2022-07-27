@@ -7,6 +7,77 @@
         mc:Ignorable="d"
         Title="Events" Height="450" Width="800">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="20"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="20" />
+        </Grid.RowDefinitions>
+
+        <Button x:Name="btnBack" Content="Back" Grid.Column="1" Grid.Row="1" Margin="30, 10" Click="btnBack_Click"/>
+        <TextBlock Text="Search:" Grid.Column="2" Grid.Row="1" TextAlignment="Right" FontSize="15" Margin="0, 10"/>
+        <TextBox x:Name="tbxSearch" Grid.Column="3" Grid.Row="1" Margin="10, 10"/>
+        <Button x:Name="btnSearchGo" Content="Go" Grid.Column="4" Grid.Row="1" Margin="30, 10" Click="btnSearchGo_Click"/>
+
+        <FlowDocumentScrollViewer Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="4">
+            <FlowDocument>
+
+                <Table Name="tblstudents" BorderBrush="Black" BorderThickness="1">
+                    <TableRowGroup>
+                        <TableRow>
+                            <TableCell>
+                                <Paragraph>
+                                    <TextBlock Text="ID"/>
+                                    <TextBlock Text="ID" />
+                                </Paragraph>
+                            </TableCell>
+                            <TableCell>
+                                <Paragraph>
+                                    <TextBlock Text="Firstname" />
+                                </Paragraph>
+                            </TableCell>
+                            <TableCell>
+                                <Paragraph>
+                                    <TextBlock Text="Lastname" />
+                                </Paragraph>
+                            </TableCell>
+                            <TableCell>
+                                <Paragraph>
+                                    <TextBlock Text="Birthday" />
+                                </Paragraph>
+                            </TableCell>
+                            <TableCell>
+                                <Paragraph>
+                                    <TextBlock Text="Age" />
+                                </Paragraph>
+                            </TableCell>
+                            <TableCell>
+                                <Paragraph>
+                                    <TextBlock Text="Gender" />
+                                </Paragraph>
+                            </TableCell>
+                            <TableCell>
+                                <Paragraph>
+                                    <TextBlock Text="House" />
+                                </Paragraph>
+                            </TableCell>
+                        </TableRow>
+                    </TableRowGroup>
+                </Table>
+            </FlowDocument>
+        </FlowDocumentScrollViewer>
+
+        <Button x:Name="btnEditStudent" Content="Edit" Grid.Column="2" Grid.Row="3" Margin="10" Click="btnEditStudent_Click"/>
+        <Button x:Name="btnAddStudent" Content="Add" Grid.Column="3" Grid.Row="3" Margin="10" Click="btnAddStudent_Click"/>
+
     </Grid>
 </Window>
