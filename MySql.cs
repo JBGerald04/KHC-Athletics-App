@@ -11,15 +11,17 @@ namespace KHC_Athletics_and_House_Points
         static MySqlConnection connection;
         public static bool connected = false;
         public static List<Students> student = new List<Students>();
-        public static List<ID> newid = new List<ID>();
+        //public static List<ID> newid = new List<ID>();
+        //public static int student_count;
+        //public static int[] student_ids;
 
 
-        public class ID
-        {
-            public int students_id;
-            public int houses_id;
-            public int events_id;
-        }
+        //public class ID
+        //{
+        //    public int students_id;
+        //    public int houses_id;
+        //    public int events_id;
+        //}
 
 
         public class Students
@@ -29,6 +31,7 @@ namespace KHC_Athletics_and_House_Points
             public string firstname;
             public string lastname;
             public string birthday;
+            public int age;
             public string gender;
             public int house_id;
         }
@@ -37,18 +40,18 @@ namespace KHC_Athletics_and_House_Points
         // Establish a connection with database
         public static void Connect()
         {
-            try
-            {
-                string constring = "SERVER=" + Program.mysql_server + ";" + "MySql=" + Program.mysql_database + ";" + "UID=" + Program.mysql_username + ";" + "PASSWORD=" + Program.mysql_password + ";";
-                connection = new MySqlConnection(constring);
-                connection.Open();
-                connected = true;
-            }
-            catch
-            {
-                MessageBox.Show("Error connecting to mysql!");
-                connected = false;
-            }
+            //try
+            //{
+            string constring = "SERVER=" + Program.mysql_server + ";" + "MySql=" + Program.mysql_database + ";" + "UID=" + Program.mysql_username + ";" + "PASSWORD=" + Program.mysql_password + ";";
+            connection = new MySqlConnection(constring);
+            connection.Open();
+            connected = true;
+            //}
+            //catch
+            //{
+            //    MessageBox.Show("Error connecting to mysql!");
+            //    connected = false;
+            //}
         }
 
 
@@ -87,15 +90,22 @@ namespace KHC_Athletics_and_House_Points
         {
             if (connected == true)
             {
-                string query = "SELECT * FROM students";
+                string query = "SELECT COUNT(id) as student_count FROM students";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 MySqlDataReader reader = cmd.ExecuteReader();
+                reader.Close();
+                cmd.Dispose();
+
+                query = "SELECT * FROM students";
+                cmd = new MySqlCommand(query, connection);
+                reader = cmd.ExecuteReader();
 
                 int id;
                 DateTime birthday;
                 while (reader.Read())
                 {
                     id = int.Parse(reader["id"].ToString());
+
                     birthday = DateTime.Parse(reader["birthday"].ToString());
                     query = "UPDATE students SET age='" + CalculateAge(birthday) + "' WHERE  id='" + id + "'";
                     MySqlCommand command = new MySqlCommand(query, connection);
@@ -143,12 +153,29 @@ namespace KHC_Athletics_and_House_Points
         }
 
 
+        public static void SelectStudents()
+        {
+            string query = "SELECT * FROM students";
+            MySqlCommand cmd = new MySqlCommand(query, connection);
+            MySqlDataReader reader = cmd.ExecuteReader();
+            int i = 0;
+            while (reader.Read())
+            {
+                student.Add(new MySql.Students { id = int.Parse(reader["id"].ToString()), firstname = $"{reader["lastname"]}", lastname = $"{reader["lastname"]}", birthday = $"{reader["birthday"]}", age = int.Parse(reader["age"].ToString()), gender = $"{reader["birthday"]}", house_id = int.Parse(reader["house_id"].ToString()) });
+                i++;
+            }
+        }
+
+
+
+
+
         public static int CalculateAge(DateTime dateOfBirth)
         {
             int age;
             age = DateTime.Now.Year - dateOfBirth.Year;
             if (DateTime.Now.DayOfYear < dateOfBirth.DayOfYear)
-                age = age - 1;
+                age--;
             return age;
         }
 

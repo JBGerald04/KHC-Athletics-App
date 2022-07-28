@@ -40,8 +40,8 @@ namespace KHC_Athletics_and_House_Points
             cbxstudent_birthday_year.ItemsSource = data_birthdayyear;
             cbxstudent_gender.ItemsSource = data_gender;
             cbxstudent_house.ItemsSource = data_house;
-            for (int i = 0; i < MySql.student.Count; i++) { data_id[i] = MySql.student[i].id; }
-            cbxstudent_id.ItemsSource = data_id;
+            //for (int i = 0; i < MySql.newid.Count; i++) { data_id[i] = MySql.newid[i].students_id; }
+            // cbxstudent_id.ItemsSource = data_id;
 
         }
 
