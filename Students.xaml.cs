@@ -30,36 +30,36 @@ namespace KHC_Athletics_and_House_Points
         {
             var rowGroup = tblstudents.RowGroups.FirstOrDefault();
 
-            for (int i = 0; i < Database.student.Count; i++)
+            for (int i = 0; i < MySql.student.Count; i++)
             {
                 TableRow row = new TableRow();
                 TableCell cell = new TableCell();
 
-                cell.Blocks.Add(new Paragraph(new Run(Database.student[i].id.ToString())));
+                cell.Blocks.Add(new Paragraph(new Run(MySql.student[i].id.ToString())));
                 row.Cells.Add(cell);
 
                 cell = new TableCell();
-                cell.Blocks.Add(new Paragraph(new Run(Database.student[i].firstname)));
+                cell.Blocks.Add(new Paragraph(new Run(MySql.student[i].firstname)));
                 row.Cells.Add(cell);
 
                 cell = new TableCell();
-                cell.Blocks.Add(new Paragraph(new Run(Database.student[i].lastname)));
+                cell.Blocks.Add(new Paragraph(new Run(MySql.student[i].lastname)));
                 row.Cells.Add(cell);
 
                 cell = new TableCell();
-                cell.Blocks.Add(new Paragraph(new Run(Database.student[i].birthday)));
+                cell.Blocks.Add(new Paragraph(new Run(MySql.student[i].birthday)));
                 row.Cells.Add(cell);
 
                 cell = new TableCell();
-                cell.Blocks.Add(new Paragraph(new Run(Database.student[i].age.ToString())));
+                cell.Blocks.Add(new Paragraph(new Run(MySql.student[i].age.ToString())));
                 row.Cells.Add(cell);
 
                 cell = new TableCell();
-                cell.Blocks.Add(new Paragraph(new Run(Database.student[i].gender)));
+                cell.Blocks.Add(new Paragraph(new Run(MySql.student[i].gender)));
                 row.Cells.Add(cell);
 
                 cell = new TableCell();
-                cell.Blocks.Add(new Paragraph(new Run(Sentral.houseData[Database.student[i].house_id - 1].house_name)));
+                cell.Blocks.Add(new Paragraph(new Run(Sentral.houseData[MySql.student[i].house_id - 1].house_name)));
                 row.Cells.Add(cell);
 
                 rowGroup.Rows.Add(row);

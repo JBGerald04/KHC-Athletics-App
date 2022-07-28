@@ -11,6 +11,15 @@ namespace KHC_Athletics_and_House_Points
         static MySqlConnection connection;
         public static bool connected = false;
         public static List<Students> student = new List<Students>();
+        public static List<ID> newid = new List<ID>();
+
+
+        public class ID
+        {
+            public int students_id;
+            public int houses_id;
+            public int events_id;
+        }
 
 
         public class Students
@@ -20,7 +29,6 @@ namespace KHC_Athletics_and_House_Points
             public string firstname;
             public string lastname;
             public string birthday;
-            public int age;
             public string gender;
             public int house_id;
         }
@@ -79,12 +87,23 @@ namespace KHC_Athletics_and_House_Points
         {
             if (connected == true)
             {
-                for (int i = 0; i < ; i++)
+                string query = "SELECT * FROM students";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                int id;
+                DateTime birthday;
+                while (reader.Read())
                 {
-                    string query = "UPDATE houses SET house_name='" + Sentral.houseData[i].house_name + "',house_colour='" + Sentral.houseData[i].house_colour + "',house_points='" + Sentral.houseData[i].house_points + "',house_sentralid='" + Sentral.houseData[i].house_sentralid + "' WHERE id='" + (i + 1) + "';";
-                    MySqlCommand cmd = new MySqlCommand(query, connection);
-                    cmd.ExecuteNonQuery();
+                    id = int.Parse(reader["id"].ToString());
+                    birthday = DateTime.Parse(reader["birthday"].ToString());
+                    query = "UPDATE students SET age='" + CalculateAge(birthday) + "' WHERE  id='" + id + "'";
+                    MySqlCommand command = new MySqlCommand(query, connection);
+                    command.ExecuteNonQuery();
+                    command.Dispose();
                 }
+                cmd.Dispose();
+                reader.Close();
             }
         }
 
@@ -102,22 +121,21 @@ namespace KHC_Athletics_and_House_Points
                 if (reader.HasRows) { MessageBox.Show("This student already exists in the database."); }
                 else
                 {
-                    query = $"INSERT INTO students (firstname, lastname, birthday, gender, house_id) VALUES ('{student[index].firstname}', '{student[index].lastname}', '{student[index].birthday}', '{student[index].gender}', {student[index].house_id})";
+                    query = $"INSERT INTO students (firstname, lastname, birthday, gender, age, house_id) VALUES ('{student[index].firstname}', '{student[index].lastname}', '{student[index].birthday}', {CalculateAge(DateTime.Parse(student[index].birthday))}, '{student[index].gender}', {student[index].house_id})";
                     cmd = new MySqlCommand(query, connection);
                     cmd.ExecuteNonQuery();
                     cmd.Dispose();
-                    reader.Close();
                     MessageBox.Show("Successfully added student");
                 }
             }
         }
 
 
-        public static void UpdateStudent(int index)
+        public static void UpdateStudent()
         {
             if (connected == true)
             {
-                string query = "UPDATE students SET firstname='" + student[0].firstname + "', lastname='" + student[0].lastname + "', birthday='" + student[0].birthday + "', gender='" + student[0].gender + "',house_id='" + student[0].house_id + "' WHERE  id='" + index + "';";
+                string query = "UPDATE students SET firstname='" + student[0].firstname + "', lastname='" + student[0].lastname + "', birthday='" + student[0].birthday + "', age='" + CalculateAge(DateTime.Parse(student[0].birthday)) + "', gender='" + student[0].gender + "', house_id='" + student[0].house_id + "' WHERE  id='" + student[0].id + "';";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.ExecuteNonQuery();
                 MessageBox.Show("Successfully updated student");
@@ -133,6 +151,9 @@ namespace KHC_Athletics_and_House_Points
                 age = age - 1;
             return age;
         }
+
+
+
 
 
 

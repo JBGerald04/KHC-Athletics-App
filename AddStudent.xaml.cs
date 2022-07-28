@@ -28,12 +28,21 @@ namespace KHC_Athletics_and_House_Points
         public AddStudent(bool edit)
         {
             InitializeComponent();
+            SetValues();
+            Check(edit);
+        }
+
+
+        public void SetValues()
+        {
             cbxstudent_birthday_day.ItemsSource = data_birthdayday;
             cbxstudent_birthday_month.ItemsSource = data_birthdaymonth;
             cbxstudent_birthday_year.ItemsSource = data_birthdayyear;
             cbxstudent_gender.ItemsSource = data_gender;
             cbxstudent_house.ItemsSource = data_house;
-            Check(edit);
+            for (int i = 0; i < MySql.student.Count; i++) { data_id[i] = MySql.student[i].id; }
+            cbxstudent_id.ItemsSource = data_id;
+
         }
 
 
@@ -63,11 +72,6 @@ namespace KHC_Athletics_and_House_Points
                 cbxstudent_birthday_year.IsEnabled = false;
                 cbxstudent_gender.IsEnabled = false;
                 cbxstudent_house.IsEnabled = false;
-                for (int i = 0; i < MySql.student.Count; i++)
-                {
-                    data_id[i] = MySql.student[i].id;
-                }
-                cbxstudent_id.ItemsSource = data_id;
                 btninsert.Visibility = Visibility.Hidden;
             }
         }
@@ -81,32 +85,14 @@ namespace KHC_Athletics_and_House_Points
 
         private void btnsubmit_Click(object sender, RoutedEventArgs e)
         {
-            if (btnsubmit.Content.ToString() == "Add")
+            if (tbxstudent_firstname.Text != "" && tbxstudent_lastname.Text != "" && cbxstudent_birthday_day.SelectedItem != null && cbxstudent_birthday_month.SelectedItem != null && cbxstudent_birthday_year.SelectedItem != null && cbxstudent_gender.SelectedItem != null && cbxstudent_house.SelectedItem != null)
             {
-                if (tbxstudent_firstname.Text != "" && tbxstudent_lastname.Text != "" && cbxstudent_birthday_day.SelectedItem != null && cbxstudent_birthday_month.SelectedItem != null && cbxstudent_birthday_year.SelectedItem != null && cbxstudent_gender.SelectedItem != null && cbxstudent_house.SelectedItem != null)
-                {
-                    MySql.newStudent.Add(new MySql.AddStudent { firstname = $"{tbxstudent_firstname.Text}", lastname = $"{tbxstudent_lastname.Text}", birthday = $"{cbxstudent_birthday_day.SelectedItem}-{cbxstudent_birthday_month.SelectedItem}-{cbxstudent_birthday_year.SelectedItem}", gender = cbxstudent_gender.SelectedItem.ToString(), house_id = (cbxstudent_house.SelectedIndex + 1) });
-                    MySql.AddStudent(0);
-                    Reset();
-                }
-                else { MessageBox.Show("Error adding student. Not all boxes had a selected item."); }
+                MySql.student.Add(new MySql.Students { id = int.Parse(cbxstudent_id.SelectedItem.ToString()), firstname = $"{tbxstudent_firstname.Text}", lastname = $"{tbxstudent_lastname.Text}", birthday = $"{cbxstudent_birthday_day.SelectedItem}-{cbxstudent_birthday_month.SelectedItem}-{cbxstudent_birthday_year.SelectedItem}", gender = cbxstudent_gender.SelectedItem.ToString(), house_id = cbxstudent_house.SelectedIndex + 1 });
+                if (btnsubmit.Content.ToString() == "Add") { MySql.AddStudent(0); }
+                else { MySql.UpdateStudent(); }
+                Reset();
             }
-            else
-            {
-                if (tbxstudent_firstname.Text != "" && tbxstudent_lastname.Text != "" && cbxstudent_birthday_day.SelectedItem != null && cbxstudent_birthday_month.SelectedItem != null && cbxstudent_birthday_year.SelectedItem != null && cbxstudent_gender.SelectedItem != null && cbxstudent_house.SelectedItem != null)
-                {
-                    MySql.newStudent.Add(new MySql.AddStudent { firstname = $"{tbxstudent_firstname.Text}", lastname = $"{tbxstudent_lastname.Text}", birthday = $"{cbxstudent_birthday_day.SelectedItem}-{cbxstudent_birthday_month.SelectedItem}-{cbxstudent_birthday_year.SelectedItem}", gender = cbxstudent_gender.SelectedItem.ToString(), house_id = (cbxstudent_house.SelectedIndex + 1) });
-                    int i = cbxstudent_id.SelectedIndex;
-                    MySql.student[i].firstname = $"{tbxstudent_firstname.Text}";
-                    MySql.student[i].lastname = $"{tbxstudent_lastname.Text}";
-                    MySql.student[i].birthday = $"{cbxstudent_birthday_day.SelectedItem}-{cbxstudent_birthday_month.SelectedItem}-{cbxstudent_birthday_year.SelectedItem}";
-                    MySql.student[i].gender = cbxstudent_gender.SelectedItem.ToString();
-                    MySql.student[i].house_id = int.Parse(cbxstudent_house.SelectedIndex.ToString() + 1);
-                    MySql.UpdateStudent(int.Parse(cbxstudent_id.SelectedItem.ToString()));
-                    Reset();
-                }
-                else { MessageBox.Show("Error updating student. Not all boxes had a selected item."); }
-            }
+            else { MessageBox.Show("Error. Not all boxes had a selected value."); }
         }
 
 
@@ -163,13 +149,6 @@ namespace KHC_Athletics_and_House_Points
                 cbxstudent_birthday_year.SelectedItem = int.Parse(MySql.student[i - 1].birthday.Split('-')[2]);
                 cbxstudent_gender.SelectedItem = MySql.student[i - 1].gender;
                 cbxstudent_house.SelectedIndex = MySql.student[i - 1].house_id - 1;
-                tbxstudent_firstname.IsEnabled = true;
-                tbxstudent_lastname.IsEnabled = true;
-                cbxstudent_birthday_day.IsEnabled = true;
-                cbxstudent_birthday_month.IsEnabled = true;
-                cbxstudent_birthday_year.IsEnabled = true;
-                cbxstudent_gender.IsEnabled = true;
-                cbxstudent_house.IsEnabled = true;
                 btnsubmit.Content = "Edit";
             }
         }
