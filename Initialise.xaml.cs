@@ -33,17 +33,11 @@ namespace KHC_Athletics_and_House_Points
 
         private void Start()
         {
-            pgbSentral.Value = 50;
             Sentral.Login();
-            pgbSentral.Value = 75;
             Sentral.DownloadHouseData();
-            pgbSentral.Value = 100;
             MySql.Connect();
-            pgbSql.Value = 50;
             MySql.SyncHouseData();
-            pgbSql.Value = 75;
             MySql.SyncStudents();
-            pgbSql.Value = 100;
 
             if (MySql.connected == true && Sentral.connected == true)
             {
@@ -64,11 +58,11 @@ namespace KHC_Athletics_and_House_Points
             if (cbxSql.IsChecked == true) { rewriteSql = true; }
             else { rewriteSql = false; }
             Program.sentral_username = tbxSentral_Username.Text;
-            Program.sentral_password = tbxSentral_Password.Text;
+            Program.sentral_password = pbxSentral_Password.Password.ToString();
             Program.mysql_server = tbxMySql_URL.Text;
             Program.mysql_database = tbxMySql_Database.Text;
             Program.mysql_username = tbxMySql_Username.Text;
-            Program.mysql_password = tbxMySql_Password.Text;
+            Program.mysql_password = pbxMySql_Password.Password.ToString();
             Start();
         }
 
@@ -82,11 +76,11 @@ namespace KHC_Athletics_and_House_Points
                 var data = line.Split(':');
 
                 tbxSentral_Username.Text = data[0];
-                tbxSentral_Password.Text = data[1];
+                pbxSentral_Password.Password = data[1];
                 tbxMySql_URL.Text = data[2];
                 tbxMySql_Database.Text = data[3];
                 tbxMySql_Username.Text = data[4];
-                tbxMySql_Password.Text = data[5];
+                pbxMySql_Password.Password = data[5];
             }
             catch
             {

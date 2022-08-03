@@ -20,7 +20,7 @@ namespace KHC_Athletics_and_House_Points
         int[] data_birthdayyear = { 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022 };
         string[] data_gender = { "Male", "Female", "Not Specified" };
         string[] data_house = { Sentral.houseData[0].house_name, Sentral.houseData[1].house_name, Sentral.houseData[2].house_name, Sentral.houseData[3].house_name };
-        int[] data_id = new int[MySql.student.Count];
+        int[] data_id = new int[MySql.student_count];
         string path;
         int count;
 
@@ -40,8 +40,8 @@ namespace KHC_Athletics_and_House_Points
             cbxstudent_birthday_year.ItemsSource = data_birthdayyear;
             cbxstudent_gender.ItemsSource = data_gender;
             cbxstudent_house.ItemsSource = data_house;
-            //for (int i = 0; i < MySql.newid.Count; i++) { data_id[i] = MySql.newid[i].students_id; }
-            // cbxstudent_id.ItemsSource = data_id;
+            for (int i = 0; i < MySql.student_count; i++) { data_id[i] = MySql.student_ids[i]; }
+            cbxstudent_id.ItemsSource = data_id;
 
         }
 
@@ -140,15 +140,15 @@ namespace KHC_Athletics_and_House_Points
         {
             if (cbxstudent_id.SelectedItem != null)
             {
-                int i = int.Parse(cbxstudent_id.SelectedItem.ToString());
+                int i = int.Parse(cbxstudent_id.SelectedItem.ToString()) - 1;
 
-                tbxstudent_firstname.Text = MySql.student[i - 1].firstname;
-                tbxstudent_lastname.Text = MySql.student[i - 1].lastname;
-                cbxstudent_birthday_day.SelectedItem = int.Parse(MySql.student[i - 1].birthday.Split('-')[0]);
-                cbxstudent_birthday_month.SelectedItem = int.Parse(MySql.student[i - 1].birthday.Split('-')[1]);
-                cbxstudent_birthday_year.SelectedItem = int.Parse(MySql.student[i - 1].birthday.Split('-')[2]);
-                cbxstudent_gender.SelectedItem = MySql.student[i - 1].gender;
-                cbxstudent_house.SelectedIndex = MySql.student[i - 1].house_id - 1;
+                tbxstudent_firstname.Text = MySql.student[i].firstname;
+                tbxstudent_lastname.Text = MySql.student[i].lastname;
+                cbxstudent_birthday_day.SelectedItem = int.Parse(MySql.student[i].birthday.Split('-')[0]);
+                cbxstudent_birthday_month.SelectedItem = int.Parse(MySql.student[i].birthday.Split('-')[1]);
+                cbxstudent_birthday_year.SelectedItem = int.Parse(MySql.student[i].birthday.Split('-')[2]);
+                cbxstudent_gender.SelectedItem = MySql.student[i].gender;
+                cbxstudent_house.SelectedIndex = MySql.student[i].house_id - 1;
                 btnsubmit.Content = "Edit";
             }
         }

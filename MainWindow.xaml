@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KHC_Athletics_and_House_Points"
         mc:Ignorable="d" FontSize="18"
-        Title="Our WPF Demo" Height="350" Width="525" FontFamily="Segoe UI Light" WindowState="Maximized">
+        Title="Our WPF Demo" Height="500" Width="750" FontFamily="Segoe UI Light" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20" />
@@ -25,21 +25,10 @@
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Column="1" Grid.Row="1" FontSize="36" Text="Hi World" Grid.ColumnSpan="3" Margin="0, 0, 0,10"/>
+        <TextBlock Grid.Column="1" Grid.Row="1" FontSize="36" Text="KHC Athletics and House Points System" Grid.ColumnSpan="4" TextAlignment="Center" Margin="0, 0, 0,10"/>
 
-        <TextBlock Grid.Column="1" Grid.Row="2" FontWeight="SemiBold" Text="First Name" FontFamily="Segoe UI"/>
+        <Button x:Name="btnStudents" Content="Students" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" Margin="10" Click="btnStudents_Click" />
+        <Button x:Name="btnResults" Content="Results" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="2" Margin="10" Click="btnResults_Click" />
 
-        <TextBox x:Name="firstnametext" Grid.Column="2" Grid.Row="2" Width="150" Margin="10, 0, 0, 0"/>
-
-        <Button x:Name="submitButton" Content="Run Me" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" Margin="10" Click="submitButton_Click" />
-        <Button x:Name="btnresults" Content="Run Me" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="2" Margin="10" Click="btnresults_Click" />
-
-        <ComboBox x:Name="mycombobox" Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="2">
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Firstname}" />
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
     </Grid>
 </Window>
