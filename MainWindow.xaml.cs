@@ -29,12 +29,13 @@ namespace KHC_Athletics_and_House_Points
         {
             var form = new Students();
             form.ShowDialog();
+            MySql.student.Clear();
         }
 
 
         private void btnResults_Click(object sender, RoutedEventArgs e)
         {
-            var form = new Results();
+            var form = new AddResult();
             form.ShowDialog();
         }
     }

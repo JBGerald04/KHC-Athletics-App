@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.IO;
 using System.Text;
 using HtmlAgilityPack;
@@ -20,7 +19,7 @@ namespace KHC_Athletics_and_House_Points
         {
             public string house_name;
             public string house_colour;
-            public string house_points;
+            public int house_points;
             public int house_sentralid;
         }
 
@@ -37,10 +36,7 @@ namespace KHC_Athletics_and_House_Points
             request.ContentLength = postBytes.Length;
             request.CookieContainer = cookies;
             request.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)";
-            using (var stream = request.GetRequestStream())
-            {
-                stream.Write(postBytes, 0, postBytes.Length);
-            }
+            using (var stream = request.GetRequestStream()) { stream.Write(postBytes, 0, postBytes.Length); }
             var response = (HttpWebResponse)request.GetResponse();
             var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
             if (responseString == "FAIL")
@@ -48,11 +44,7 @@ namespace KHC_Athletics_and_House_Points
                 MessageBox.Show("Error logging in. Please Try again.");
                 connected = false;
             }
-            else
-            {
-                connected = true;
-            }
-
+            else { connected = true; }
         }
 
 
@@ -77,15 +69,16 @@ namespace KHC_Athletics_and_House_Points
                     var newline = new Data();
                     name = div.SelectSingleNode(".//h3").InnerHtml;
                     newline.house_colour = div.GetAttributeValue("style", null).Split(": ")[1];
-                    newline.house_name = name.Split(' ')[1];
-                    newline.house_points = div.SelectSingleNode(".//span").InnerHtml;
+                    newline.house_name = name.Split("8517 ")[1];
+                    try { newline.house_points = int.Parse(div.SelectSingleNode(".//span").InnerHtml.Split(',')[0] + div.SelectSingleNode(".//span").InnerHtml.Split(',')[1]); }
+                    catch { newline.house_points = int.Parse(div.SelectSingleNode(".//span").InnerHtml); }
                     newline.house_sentralid = int.Parse(div.SelectSingleNode(".//a[@href]").GetAttributeValue("href", string.Empty).Split('/').Last());
                     houseData.Add(newline);
                 }
             }
             else
             {
-                MessageBox.Show("Error downloading House Points, please retry by pressing submit again.\nIf the problem persists, check your internet connection, or restart the program.");
+                MessageBox.Show("Error downloading House Points from Sentral, please retry by pressing Login again.\nIf the problem persists, check your internet connection, or restart the program.");
                 Login();
             }
         }
@@ -96,7 +89,7 @@ namespace KHC_Athletics_and_House_Points
             if (connected == true)
             {
                 string formUrl = "https://kelsohs.sentral.com.au/housepoints/house/add_points/";
-                string formParams = string.Format("houses[]={0}&date&points={1}&description={2}&action={3}", houseData[house_id].house_sentralid, points, $"athletics - {event_name}", "add-points");
+                string formParams = string.Format("houses[]={0}&date&points={1}&description={2}&action={3}", houseData[house_id].house_sentralid, points, event_name, "add-points");
                 byte[] postBytes = Encoding.ASCII.GetBytes(formParams);
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(formUrl);
                 request.Method = "POST";
@@ -104,15 +97,12 @@ namespace KHC_Athletics_and_House_Points
                 request.ContentLength = postBytes.Length;
                 request.CookieContainer = cookies;
                 request.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)";
-                using (var stream = request.GetRequestStream())
-                {
-                    stream.Write(postBytes, 0, postBytes.Length);
-                }
+                using (var stream = request.GetRequestStream()) { stream.Write(postBytes, 0, postBytes.Length); }
                 var response = (HttpWebResponse)request.GetResponse();
             }
             else
             {
-                MessageBox.Show("Error Adding House Points, please retry by pressing submit again.\nIf the problem persists, check your internet connection, or restart the program.");
+                MessageBox.Show("Error Adding House Points to Sentral, please retry by pressing submit again.\nIf the problem persists, check your internet connection, or restart the program.");
                 Login();
             }
         }

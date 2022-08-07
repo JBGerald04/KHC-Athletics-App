@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KHC_Athletics_and_House_Points"
         mc:Ignorable="d"
-        Title="AddResult" Height="500" Width="900" FontSize="15">
+        Title="AddResult" Height="500" Width="900" FontSize="15" WindowStartupLocation="CenterScreen"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20"/>
@@ -36,16 +37,16 @@
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
 
-        <Button x:Name="btnback" Content="Back" Grid.Column="1" Grid.Row="1" Margin="5" Click="btnback_Click"/>
+        <Button x:Name="btnback" Content="Back" Grid.Column="1" Grid.Row="1" Margin="5,5,5,0" Click="btnback_Click" Height="30" VerticalAlignment="Top"/>
 
-        <TextBlock Text="Event Results" Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="3" FontSize="30" TextAlignment="Center"/>
+        <TextBlock Text="Results" Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="3" FontSize="30" TextAlignment="Center"/>
 
-        <ComboBox x:Name="cbxevent" Grid.Column="2" Grid.Row="2" Margin="5"/>
-        <ComboBox x:Name="cbxtype" Grid.Column="3" Grid.Row="2" Margin="5"/>
-        <ComboBox x:Name="cbxage" Grid.Column="4" Grid.Row="2" Margin="5"/>
-        <ComboBox x:Name="cbxheat" Grid.Column="2" Grid.Row="3" Margin="5"/>
-        <ComboBox x:Name="cbxspecial" Grid.Column="3" Grid.Row="3" Margin="5"/>
-        <ComboBox x:Name="cbxgender" Grid.Column="4" Grid.Row="3" Margin="5"/>
+        <ComboBox x:Name="cbxtype" Grid.Column="2" Grid.Row="2" Margin="5" SelectionChanged="cbxtype_SelectionChanged"/>
+        <ComboBox x:Name="cbxdistance" Grid.Column="4" Grid.Row="2" Margin="5" SelectionChanged="cbxdistance_SelectionChanged"/>
+        <ComboBox x:Name="cbxevent" Grid.Column="3" Grid.Row="2" Margin="5" SelectionChanged="cbxevent_SelectionChanged"/>
+        <ComboBox x:Name="cbxheat" Grid.Column="2" Grid.Row="3" Margin="5" SelectionChanged="cbxheat_SelectionChanged"/>
+        <ComboBox x:Name="cbxage" Grid.Column="3" Grid.Row="3" Margin="5" SelectionChanged="cbxage_SelectionChanged"/>
+        <ComboBox x:Name="cbxgender" Grid.Column="4" Grid.Row="3" Margin="5" SelectionChanged="cbxgender_SelectionChanged"/>
 
         <TextBlock Grid.Column="1" Grid.Row="4" Margin="0, 10, 0, 0" TextAlignment="Center">No.</TextBlock>
         <TextBlock Grid.Column="1" Grid.Row="5" TextAlignment="Center">#1</TextBlock>
@@ -84,16 +85,16 @@
         <TextBlock x:Name="tbxstudenthouse10" Grid.Column="3" Grid.Row="14"/>
 
         <TextBlock Grid.Column="4" Grid.Row="4" Margin="0, 10, 10, 0">Time / Distance:</TextBlock>
-        <TextBox x:Name="tbxtime_distance1" Grid.Column="4" Grid.Row="5"/>
-        <TextBox x:Name="tbxtime_distance2" Grid.Column="4" Grid.Row="6"/>
-        <TextBox x:Name="tbxtime_distance3" Grid.Column="4" Grid.Row="7"/>
-        <TextBox x:Name="tbxtime_distance4" Grid.Column="4" Grid.Row="8"/>
-        <TextBox x:Name="tbxtime_distance5" Grid.Column="4" Grid.Row="9"/>
-        <TextBox x:Name="tbxtime_distance6" Grid.Column="4" Grid.Row="10"/>
-        <TextBox x:Name="tbxtime_distance7" Grid.Column="4" Grid.Row="11"/>
-        <TextBox x:Name="tbxtime_distance8" Grid.Column="4" Grid.Row="12"/>
-        <TextBox x:Name="tbxtime_distance9" Grid.Column="4" Grid.Row="13"/>
-        <TextBox x:Name="tbxtime_distance10" Grid.Column="4" Grid.Row="14"/>
+        <xctk:MaskedTextBox x:Name="tbxtime_distance1" Grid.Column="4" Grid.Row="5"/>
+        <xctk:MaskedTextBox x:Name="tbxtime_distance2" Grid.Column="4" Grid.Row="6"/>
+        <xctk:MaskedTextBox x:Name="tbxtime_distance3" Grid.Column="4" Grid.Row="7"/>
+        <xctk:MaskedTextBox x:Name="tbxtime_distance4" Grid.Column="4" Grid.Row="8"/>
+        <xctk:MaskedTextBox x:Name="tbxtime_distance5" Grid.Column="4" Grid.Row="9"/>
+        <xctk:MaskedTextBox x:Name="tbxtime_distance6" Grid.Column="4" Grid.Row="10"/>
+        <xctk:MaskedTextBox x:Name="tbxtime_distance7" Grid.Column="4" Grid.Row="11"/>
+        <xctk:MaskedTextBox x:Name="tbxtime_distance8" Grid.Column="4" Grid.Row="12"/>
+        <xctk:MaskedTextBox x:Name="tbxtime_distance9" Grid.Column="4" Grid.Row="13"/>
+        <xctk:MaskedTextBox x:Name="tbxtime_distance10" Grid.Column="4" Grid.Row="14"/>
 
         <Button x:Name="btnsubmit" Content="Submit" Grid.Column="3" Grid.Row="15" Margin="10" Click="btnsubmit_Click"/>
     </Grid>

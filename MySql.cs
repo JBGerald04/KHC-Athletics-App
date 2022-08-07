@@ -11,6 +11,8 @@ namespace KHC_Athletics_and_House_Points
         static MySqlConnection connection;
         public static bool connected = false;
         public static List<Students> student = new List<Students>();
+        public static List<Results> results = new List<Results>();
+        public static List<Events> events = new List<Events>();
         public static int student_count;
         public static int[] student_ids;
 
@@ -28,7 +30,32 @@ namespace KHC_Athletics_and_House_Points
         }
 
 
-        // Database Connection
+        public class Results
+        {
+            public int id;
+            public float result;
+            public int heat;
+            public int event_id;
+            public int student_id;
+            public int points;
+            public int house_id;
+        }
+
+
+        public class Events
+        {
+            public int id;
+            public string type;
+            public string name;
+            public string distance;
+            public int age;
+            public string gender;
+        }
+
+
+
+
+        //// Database Connection ////
         public static void Connect()
         {
             try
@@ -46,7 +73,9 @@ namespace KHC_Athletics_and_House_Points
         }
 
 
-        // House Points
+
+
+        //// House Points ////
         public static void SyncHouseData()
         {
             if (connected == true)
@@ -62,11 +91,12 @@ namespace KHC_Athletics_and_House_Points
         }
 
 
-        public static void AddHousePoints(int index, int points)
+        public static void AddHousePoints(int[] points)
         {
             if (connected == true)
             {
-                string query = "UPDATE houses SET id='" + index + "',house_points='" + points + "' WHERE  id='" + index + "';";
+                string query = "";
+                for (int i = 0; i < 4; i++) { query += $"UPDATE houses SET house_points=(house_points + {points[i]}) WHERE id={i + 1};"; }
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.ExecuteNonQuery();
                 cmd.Dispose();
@@ -76,7 +106,7 @@ namespace KHC_Athletics_and_House_Points
 
 
 
-        // Students
+        //// Students ////
         public static void SyncStudents()
         {
             if (connected == true)
@@ -98,6 +128,7 @@ namespace KHC_Athletics_and_House_Points
         {
             if (connected == true)
             {
+                student.Clear();
                 string query = "SELECT COUNT(id) FROM students;";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 MySqlDataReader reader = cmd.ExecuteReader();
@@ -113,7 +144,8 @@ namespace KHC_Athletics_and_House_Points
                 while (reader.Read())
                 {
                     student_ids[i] = int.Parse(reader["id"].ToString());
-                    student.Add(new MySql.Students { id = int.Parse(reader["id"].ToString()), birthday = $"{reader["birthday"]}" });
+                    try { student.Add(new Students { id = int.Parse(reader["id"].ToString()), birthday = $"{reader["birthday"]}" }); }
+                    catch { MessageBox.Show($"Error calculating age for Student:{student_ids[i]}. Check that the birthday is in the correct format. Then restart the program."); }
                     i++;
                 }
                 cmd.Dispose();
@@ -130,18 +162,17 @@ namespace KHC_Athletics_and_House_Points
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 MySqlDataReader reader = cmd.ExecuteReader();
                 cmd.Dispose();
-                reader.Close();
-
-                if (reader.HasRows) { MessageBox.Show("This student already exists in the database."); }
+                if (reader.HasRows) { MessageBox.Show("This student already exists in the database."); reader.Close(); }
                 else
                 {
-                    query = $"INSERT INTO students (firstname, lastname, birthday, gender, age, house_id) VALUES ('{student[index].firstname}', '{student[index].lastname}', '{student[index].birthday}', {CalculateAge(DateTime.Parse(student[index].birthday))}, '{student[index].gender}', {student[index].house_id})";
+                    reader.Close();
+                    query = $"INSERT INTO students (firstname, lastname, birthday, age, gender, house_id) VALUES ('{student[index].firstname}', '{student[index].lastname}', '{student[index].birthday}', {CalculateAge(DateTime.Parse(student[index].birthday))}, '{student[index].gender}', {student[index].house_id})";
                     cmd = new MySqlCommand(query, connection);
                     cmd.ExecuteNonQuery();
                     cmd.Dispose();
                     MessageBox.Show("Successfully added student");
+                    Student_id_count();
                 }
-                Student_id_count();
             }
         }
 
@@ -162,73 +193,131 @@ namespace KHC_Athletics_and_House_Points
 
         public static void SelectStudents()
         {
+            student.Clear();
             string query = "SELECT * FROM students";
             MySqlCommand cmd = new MySqlCommand(query, connection);
             MySqlDataReader reader = cmd.ExecuteReader();
-            int i = 0;
             while (reader.Read())
             {
                 student.Add(new MySql.Students { id = int.Parse(reader["id"].ToString()), firstname = $"{reader["firstname"]}", lastname = $"{reader["lastname"]}", birthday = $"{reader["birthday"]}", age = int.Parse(reader["age"].ToString()), gender = $"{reader["gender"]}", house_id = int.Parse(reader["house_id"].ToString()) });
-                i++;
+            }
+            reader.Close();
+            cmd.Dispose();
+         }
+
+
+        public static void SearchQuery(string column, string text)
+        {
+            student.Clear();
+            string query = $"SELECT * FROM students WHERE ";
+            for (int i = 0; i < column.Split(',').Length; i++) { query += $"{column.Split(',')[i]}='" + text.Split(',')[i] + "' AND "; }
+            query = query.Substring(0, query.Length - 5);
+            MySqlCommand cmd = new MySqlCommand(query, connection);
+            MySqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                try { student.Add(new Students { id = int.Parse(reader["id"].ToString()), firstname = $"{reader["firstname"]}", lastname = $"{reader["lastname"]}", birthday = $"{reader["birthday"]}", age = int.Parse(reader["age"].ToString()), gender = $"{reader["gender"]}", house_id = int.Parse(reader["house_id"].ToString()) }); }
+                catch { MessageBox.Show("Search yeilded no results."); }
             }
             reader.Close();
             cmd.Dispose();
         }
 
 
-        public static string SearchQuery(string column, string text)
+
+
+        //// Results ////
+        public static void AddResult(int count)
         {
-            string query = $"SELECT * FROM students WHERE {column}='" + text + "'";
+            string query = $"INSERT INTO results (result, heat, event_id, student_id) VALUES ";
+            for (int i = 0; i < count; i++) { query += $"({results[i].result}, {results[i].heat}, {results[i].event_id}, {results[i].student_id}), "; }
+            query = query.Substring(0, query.Length - 2);
+            MySqlCommand cmd = new MySqlCommand(query, connection);
+            cmd.ExecuteNonQuery();
+            cmd.Dispose();
+        }
+
+
+        public static void UpdatePoints(int event_id, int index)
+        {
+            string query = $"SELECT results.id, results.result, students.house_id FROM results INNER JOIN students ON student_id = students.id WHERE event_id = {event_id} AND points_added = 0 ORDER BY results.result ";
+            if (events[index].type == "Field") { query += "DESC;"; }
+            else { query += "ASC;"; }
             MySqlCommand cmd = new MySqlCommand(query, connection);
             MySqlDataReader reader = cmd.ExecuteReader();
+            int[] Points = new int[4];
+            int points = 10;
             int count = 0;
             while (reader.Read())
             {
-                student.Add(new MySql.Students { id = int.Parse(reader["id"].ToString()), firstname = $"{reader["firstname"]}", lastname = $"{reader["lastname"]}", birthday = $"{reader["birthday"]}", age = int.Parse(reader["age"].ToString()), gender = $"{reader["gender"]}", house_id = int.Parse(reader["house_id"].ToString()) });
+                results.Add(new Results { id = int.Parse($"{reader["id"]}"), points = points });
+                Points[int.Parse($"{reader["house_id"]}") - 1] += points;
+                if (points > 1) { points--; }
                 count++;
             }
-            reader.Close();
             cmd.Dispose();
-            return count.ToString();
+            reader.Close();
+
+            AddHousePoints(new int[] { Points[0], Points[1], Points[2], Points[3] });
+            for (int j = 0; j < 4; j++) { if (Points[j] != 0) { Sentral.AddHousePoints(j, Points[j], $"{events[index].distance} {events[index].name}, {events[index].age}'s {events[index].gender} - {DateTime.Now.ToString().Split(' ')[1]}"); } } //[1]
+
+            query = "";
+            for (int i = 0; i < count; i++) { query += $"UPDATE results SET points={results[i].points}, points_added=1 WHERE id={results[i].id};"; }
+            cmd = new MySqlCommand(query, connection);
+            cmd.ExecuteNonQuery();
+            cmd.Dispose();
         }
 
 
-        public static int CalculateAge(DateTime dateOfBirth)
-        {
-            int age;
-            age = DateTime.Now.Year - dateOfBirth.Year;
-            if (DateTime.Now.DayOfYear < dateOfBirth.DayOfYear)
-                age--;
-            return age;
-        }
+        //public static void GenerateResult()
+        //{
+        //    string query = "SELECT `result`, `heat`, `points`, students.* FROM `results' INNER JOIN students ON student_id = students.id WHERE result_id = 1 ORDER BY result DESC;";
+        //    MySqlCommand cmd = new MySqlCommand(query, connection);
+        //    MySqlDataReader reader = cmd.ExecuteReader();
+        //}
 
 
 
 
-
-
-
-
-        // Results
-
-        public static void ResultsRequest(string event_name, int age, string gender)
+        //// Events ////
+        public static void AddEvent(string Type, string Name, string Distance, int Age, string Gender)
         {
             if (connected == true)
             {
-                //string query = "SELECT * FROM students WHERE age='" + age + "',gender='" + gender
+                int Id = 0;
+                string query = "SELECT id FROM events WHERE type='" + Type + "' AND name='" + Name + "' AND distance='" + Distance + "' AND age='" + Age + "' AND gender='" + Gender + "'";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                MySqlDataReader reader = cmd.ExecuteReader();
+                cmd.Dispose();
+                if (!reader.Read())
+                {
+                    reader.Close();
+                    query = $"INSERT INTO events (type, name, distance, age, gender) VALUES ('{Type}', '{Name}', '{Distance}', {Age}, '{Gender}')";
+                    cmd = new MySqlCommand(query, connection);
+                    cmd.ExecuteNonQuery();
+                    cmd.Dispose();
+
+                    query = "SELECT id FROM events WHERE type = '" + Type + "' AND name = '" + Name + "' AND distance = '" + Distance + "' AND age = '" + Age + "' AND gender = '" + Gender + "'";
+                    cmd = new MySqlCommand(query, connection);
+                    reader = cmd.ExecuteReader();
+                    while (reader.Read()) { Id = int.Parse($"{reader["id"]}"); }
+                    cmd.Dispose();
+                    reader.Close();
+                }
+                else
+                {
+                    reader.Read();
+                    Id = int.Parse($"{reader["id"]}");
+                    reader.Close();
+                }
+                events.Add(new Events { id = Id, type = Type, name = Name, distance = Distance, age = Age, gender = Gender });
             }
         }
 
 
 
 
-
-
-
-
-
-        // Misc
-
+        //// Misc ////
         public static void GenerateReport()
         {
             string query = "SELECT * FROM houses";
@@ -243,6 +332,15 @@ namespace KHC_Athletics_and_House_Points
             }
             reader.Close();
             file.Close();
+        }
+
+
+        public static int CalculateAge(DateTime dateOfBirth)
+        {
+            int age = DateTime.Now.Year - dateOfBirth.Year;
+            if (DateTime.Now.DayOfYear < dateOfBirth.DayOfYear)
+                age--;
+            return age;
         }
     }
 }

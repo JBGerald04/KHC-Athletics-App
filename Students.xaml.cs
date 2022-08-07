@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Microsoft.Win32;
+using System.IO;
 
 namespace KHC_Athletics_and_House_Points
 {
@@ -19,8 +21,9 @@ namespace KHC_Athletics_and_House_Points
     /// </summary>
     public partial class Students : Window
     {
-        //public event System.Windows.Input.TextCompositionEventHandler PreviewTextInput;
         public string[] filter_data = { "id", "firstname", "lastname", "birthday", "age", "gender", "house" };
+        int count;
+
 
         public Students()
         {
@@ -33,66 +36,38 @@ namespace KHC_Athletics_and_House_Points
 
         private void DisplayStudents(int count)
         {
-            //var rowGroup = tblstudents.RowGroups.FirstOrDefault();
+            lstStudents.Items.Clear();
             for (int i = 0; i < count; i++)
             {
                 var student = new Student()
                 {
                     Id = MySql.student[i].id,
-                    Firstname = MySql.student[i].firstname
+                    Firstname = MySql.student[i].firstname,
+                    Lastname = MySql.student[i].lastname,
+                    Birthday = MySql.student[i].birthday,
+                    Age = MySql.student[i].age,
+                    Gender = MySql.student[i].gender,
+                    House = Sentral.houseData[MySql.student[i].house_id - 1].house_name
                 };
                 lstStudents.Items.Add(student);
-
-
-
-
-
-                //TableRow row = new TableRow();
-                //TableCell cell = new TableCell();
-
-                //cell.Blocks.Add(new Paragraph(new Run(MySql.student[i].id.ToString())));
-                //row.Cells.Add(cell);
-
-                //cell = new TableCell();
-                //cell.Blocks.Add(new Paragraph(new Run(MySql.student[i].firstname)));
-                //row.Cells.Add(cell);
-
-                //cell = new TableCell();
-                //cell.Blocks.Add(new Paragraph(new Run(MySql.student[i].lastname)));
-                //row.Cells.Add(cell);
-
-                //cell = new TableCell();
-                //cell.Blocks.Add(new Paragraph(new Run(MySql.student[i].birthday)));
-                //row.Cells.Add(cell);
-
-                //cell = new TableCell();
-                //cell.Blocks.Add(new Paragraph(new Run(MySql.student[i].age.ToString())));
-                //row.Cells.Add(cell);
-
-                //cell = new TableCell();
-                //cell.Blocks.Add(new Paragraph(new Run(MySql.student[i].gender)));
-                //row.Cells.Add(cell);
-
-                //cell = new TableCell();
-                //cell.Blocks.Add(new Paragraph(new Run(Sentral.houseData[MySql.student[i].house_id - 1].house_name)));
-                //row.Cells.Add(cell);
-
-                //rowGroup.Rows.Add(row);
             }
-            MySql.student.Clear();
         }
 
 
-        private void btnBack_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
+        private void btnBack_Click(object sender, RoutedEventArgs e) { this.Close(); }
 
 
         private void btnSearch_Click(object sender, RoutedEventArgs e)
         {
-            int count = int.Parse(MySql.SearchQuery(cbxSearchFilter.SelectedItem.ToString(), tbxSearch.Text));
-            DisplayStudents(count);
+            MySql.SearchQuery(cbxSearchFilter.SelectedItem.ToString(), tbxSearch.Text);
+            DisplayStudents(MySql.student.Count);
+        }
+
+
+        private void cbxSearchFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            tbxSearch.IsEnabled = true;
+            btnSearch.IsEnabled = true;
         }
 
 
@@ -113,42 +88,49 @@ namespace KHC_Athletics_and_House_Points
             DisplayStudents(MySql.student_count);
         }
 
-        private void cbxSearchFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+
+        private void btnInsertStudents_Click(object sender, RoutedEventArgs e)
         {
-            tbxSearch.IsEnabled = true;
-            btnSearch.IsEnabled = true;
+            OpenFileDialog openStudentsFile = new OpenFileDialog();
+            openStudentsFile.Filter = "csv files (*.csv)|*.csv";
+            if (openStudentsFile.ShowDialog() == true)
+            {
+                string path = openStudentsFile.FileName;
+                LoadFile(path);
+                for (int i = 0; i < count; i++) { MySql.AddStudent(i); }
+                MessageBox.Show($"Added {count} students.");
+            }
+            MySql.SelectStudents();
+            DisplayStudents(MySql.student_count);
+            tbxSearch.IsEnabled = false;
+            btnSearch.IsEnabled = false;
+            cbxSearchFilter.SelectedItem = null;
+        }
 
-            //if (cbxSearchFilter.SelectedItem.ToString() == "id")
-            //{
-            //    PreviewTextInput = "MaskNumericInput";
-            //    tbxSearch.Text = PreviewTextInput;
-            //    //tbxSearch.Handled = Utility.IsTextNumeric(e.Text);
-            //    //tbxSearch.PreviewTextInput += "MaskNumericInput";
-            //}
-            //else if (cbxSearchFilter.SelectedItem.ToString() == "firstname")
-            //{
 
-            //}
-            //else if (cbxSearchFilter.SelectedItem.ToString() == "lastname")
-            //{
+        void LoadFile(string path)
+        {
+            var file = File.OpenText(path);         // Opens the file following the path specified by the user
+            count = 0;
+            file.ReadLine();                        // Skip the headers in the file
+            while (!file.EndOfStream)               // Runs until the end of the file
+            {
+                // Creates variables that read a line from the file and store it as a new line of data using the class 'student'
+                var line = file.ReadLine();
+                var data = line.Split(',');
+                var newline = new MySql.Students();
 
-            //}
-            //else if (cbxSearchFilter.SelectedItem.ToString() == "birthday")
-            //{
+                newline.firstname = data[1];        // Reads the first value on the current line
+                newline.lastname = data[2];         // Reads the seccond value on the current line
+                newline.birthday = data[3];
+                newline.gender = data[4];
+                newline.house_id = int.Parse(data[5]);
 
-            //}
-            //else if (cbxSearchFilter.SelectedItem.ToString() == "age")
-            //{
-
-            //}
-            //else if (cbxSearchFilter.SelectedItem.ToString() == "gender")
-            //{
-
-            //}
-            //else
-            //{
-
-            //}
+                // Saves all data collected to the list Students
+                MySql.student.Add(newline);
+                count++;
+            }
+            file.Close();   // Closes the file, we are finished with the file
         }
     }
 }
