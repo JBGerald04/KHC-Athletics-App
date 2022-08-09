@@ -14,6 +14,8 @@ namespace KHC_Athletics_and_House_Points
         public static List<Results> results = new List<Results>();
         public static List<Events> events = new List<Events>();
         public static int student_count;
+        public static int event_count;
+        public static int result_count;
         public static int[] student_ids;
 
 
@@ -197,16 +199,13 @@ namespace KHC_Athletics_and_House_Points
             string query = "SELECT * FROM students";
             MySqlCommand cmd = new MySqlCommand(query, connection);
             MySqlDataReader reader = cmd.ExecuteReader();
-            while (reader.Read())
-            {
-                student.Add(new MySql.Students { id = int.Parse(reader["id"].ToString()), firstname = $"{reader["firstname"]}", lastname = $"{reader["lastname"]}", birthday = $"{reader["birthday"]}", age = int.Parse(reader["age"].ToString()), gender = $"{reader["gender"]}", house_id = int.Parse(reader["house_id"].ToString()) });
-            }
+            while (reader.Read()) { student.Add(new Students { id = int.Parse(reader["id"].ToString()), firstname = $"{reader["firstname"]}", lastname = $"{reader["lastname"]}", birthday = $"{reader["birthday"]}", age = int.Parse(reader["age"].ToString()), gender = $"{reader["gender"]}", house_id = int.Parse(reader["house_id"].ToString()) }); }
             reader.Close();
             cmd.Dispose();
          }
 
 
-        public static void SearchQuery(string column, string text)
+        public static void StudentSearchQuery(string column, string text)
         {
             student.Clear();
             string query = $"SELECT * FROM students WHERE ";
@@ -269,6 +268,36 @@ namespace KHC_Athletics_and_House_Points
         }
 
 
+        public static void SelectResults()
+        {
+            results.Clear();
+            string query = "SELECT * FROM results";
+            MySqlCommand cmd = new MySqlCommand(query, connection);
+            MySqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read()) { results.Add(new Results { id = int.Parse(reader["id"].ToString()), result = int.Parse(reader["result"].ToString()), heat = int.Parse(reader["heat"].ToString()), event_id = int.Parse(reader["event_id"].ToString()), student_id = int.Parse(reader["student_id"].ToString()), points = int.Parse(reader["points"].ToString()) }); }
+            reader.Close();
+            cmd.Dispose();
+        }
+
+
+        public static void ResultSearchQuery(string column, string text)
+        {
+            results.Clear();
+            string query = $"SELECT * FROM results WHERE ";
+            for (int i = 0; i < column.Split(',').Length; i++) { query += $"{column.Split(',')[i]}='" + text.Split(',')[i] + "' AND "; }
+            query = query.Substring(0, query.Length - 5);
+            MySqlCommand cmd = new MySqlCommand(query, connection);
+            MySqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                try { results.Add(new Results { id = int.Parse(reader["id"].ToString()), result = int.Parse(reader["result"].ToString()), heat = int.Parse(reader["heat"].ToString()), event_id = int.Parse(reader["event_id"].ToString()), student_id = int.Parse(reader["student_id"].ToString()), points = int.Parse(reader["points"].ToString()) }); }
+                catch { MessageBox.Show("Search yeilded no results."); }
+            }
+            reader.Close();
+            cmd.Dispose();
+        }
+
+
         //public static void GenerateResult()
         //{
         //    string query = "SELECT `result`, `heat`, `points`, students.* FROM `results' INNER JOIN students ON student_id = students.id WHERE result_id = 1 ORDER BY result DESC;";
@@ -312,6 +341,36 @@ namespace KHC_Athletics_and_House_Points
                 }
                 events.Add(new Events { id = Id, type = Type, name = Name, distance = Distance, age = Age, gender = Gender });
             }
+        }
+
+
+        public static void SelectEvents()
+        {
+            events.Clear();
+            string query = "SELECT * FROM events";
+            MySqlCommand cmd = new MySqlCommand(query, connection);
+            MySqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read()) { events.Add(new  Events { id = int.Parse(reader["id"].ToString()), type = $"{reader["type"]}", name = $"{reader["name"]}", distance = $"{reader["distance"]}", age = int.Parse(reader["age"].ToString()), gender = $"{reader["gender"]}" }); }
+            reader.Close();
+            cmd.Dispose();
+        }
+
+
+        public static void EventSearchQuery(string column, string text)
+        {
+            events.Clear();
+            string query = $"SELECT * FROM events WHERE ";
+            for (int i = 0; i < column.Split(',').Length; i++) { query += $"{column.Split(',')[i]}='" + text.Split(',')[i] + "' AND "; }
+            query = query.Substring(0, query.Length - 5);
+            MySqlCommand cmd = new MySqlCommand(query, connection);
+            MySqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                try { events.Add(new Events { id = int.Parse(reader["id"].ToString()), type = reader["type"].ToString(), name = reader["name"].ToString(), distance = reader["distance"].ToString(), age = int.Parse(reader["age"].ToString()), gender = reader["gender"].ToString() }); }
+                catch { MessageBox.Show("Search yeilded no results."); }
+            }
+            reader.Close();
+            cmd.Dispose();
         }
 
 

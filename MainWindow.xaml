@@ -5,30 +5,29 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KHC_Athletics_and_House_Points"
         mc:Ignorable="d" FontSize="18"
-        Title="Our WPF Demo" Height="500" Width="750" FontFamily="Segoe UI Light" WindowStartupLocation="CenterScreen">
+        Title="KHC Athletics and House Points System" Height="225" Width="700" FontFamily="Segoe UI Light" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None" Icon="/KHC Logo.ico">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="20" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="20" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Column="1" Grid.Row="1" FontSize="36" Text="KHC Athletics and House Points System" Grid.ColumnSpan="4" TextAlignment="Center" Margin="0, 0, 0,10"/>
+        <TextBlock Grid.Column="1" Grid.Row="1" FontSize="36" Text="KHC Athletics And House Points System" Grid.ColumnSpan="4" TextAlignment="Center" Margin="0, 0, 0,10"/>
 
-        <Button x:Name="btnStudents" Content="Students" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" Margin="10" Click="btnStudents_Click" />
-        <Button x:Name="btnResults" Content="Results" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="2" Margin="10" Click="btnResults_Click" />
+        <Button x:Name="btnStudents" Content="Students" Grid.Column="1" Grid.Row="2" Margin="10" Click="btnStudents_Click"/>
+        <Button x:Name="btnEvents" Content="Events" Grid.Column="2" Grid.Row="2" Margin="10" Click="btnEvents_Click"/>
+        <Button x:Name="btnHouse_Points" Content="House Points" Grid.Column="3" Grid.Row="2" Margin="10" Click="btnHouse_Points_Click"/>
+        <Button x:Name="btnQuit" Content="Quit" Grid.Column="2" Grid.Row="3" Margin="10" Click="btnQuit_Click"/>
 
     </Grid>
 </Window>

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KHC_Athletics_and_House_Points"
         mc:Ignorable="d"
-        Title="Students" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+        Title="Students" Height="450" Width="800" WindowStartupLocation="CenterScreen" ShowInTaskbar="False">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20"/>
@@ -35,7 +35,7 @@
                 <GridView>
                     <GridViewColumn Header="ID" DisplayMemberBinding="{Binding Id}"/>
                     <GridViewColumn Header="Firstname" DisplayMemberBinding="{Binding Firstname}"/>
-                    <GridViewColumn Header="Lastname" DisplayMemberBinding="{Binding Fastname}"/>
+                    <GridViewColumn Header="Lastname" DisplayMemberBinding="{Binding Lastname}"/>
                     <GridViewColumn Header="Birthday" DisplayMemberBinding="{Binding Birthday}"/>
                     <GridViewColumn Header="Age" DisplayMemberBinding="{Binding Age}"/>
                     <GridViewColumn Header="Gender" DisplayMemberBinding="{Binding Gender}"/>

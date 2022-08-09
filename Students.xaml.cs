@@ -25,12 +25,22 @@ namespace KHC_Athletics_and_House_Points
         int count;
 
 
+        public class Student
+        {
+            public int Id { get; set; }
+            public string Firstname { get; set; }
+            public string Lastname { get; set; }
+            public string Birthday { get; set; }
+            public int Age { get; set; }
+            public string Gender { get; set; }
+            public string House { get; set; }
+        }
+
+
         public Students()
         {
             InitializeComponent();
             cbxSearchFilter.ItemsSource = filter_data;
-            MySql.SelectStudents();
-            DisplayStudents(MySql.student_count);
         }
 
 
@@ -59,8 +69,25 @@ namespace KHC_Athletics_and_House_Points
 
         private void btnSearch_Click(object sender, RoutedEventArgs e)
         {
-            MySql.SearchQuery(cbxSearchFilter.SelectedItem.ToString(), tbxSearch.Text);
-            DisplayStudents(MySql.student.Count);
+            if (cbxSearchFilter.SelectedItem.ToString() == "house")
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    if (Sentral.houseData[i].house_name.Contains(tbxSearch.Text) == true)
+                    {
+                        MySql.StudentSearchQuery($"{cbxSearchFilter.SelectedItem}_id", $"{i + 1}");
+                        DisplayStudents(MySql.student.Count);
+                        return;
+                    }
+                }
+                MySql.StudentSearchQuery($"{cbxSearchFilter.SelectedItem}_id", "0");
+                DisplayStudents(MySql.student.Count);
+            }
+            else
+            {
+                MySql.StudentSearchQuery(cbxSearchFilter.SelectedItem.ToString(), tbxSearch.Text);
+                DisplayStudents(MySql.student.Count);
+            }
         }
 
 

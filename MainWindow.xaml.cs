@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,10 +35,19 @@ namespace KHC_Athletics_and_House_Points
         }
 
 
-        private void btnResults_Click(object sender, RoutedEventArgs e)
+        private void btnEvents_Click(object sender, RoutedEventArgs e)
         {
-            var form = new AddResult();
+            var form = new Events();
             form.ShowDialog();
         }
+
+
+        private void btnQuit_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+
+        private void btnHouse_Points_Click(object sender, RoutedEventArgs e) { Process.Start("C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe", "localhost/points/"); }
     }
 }

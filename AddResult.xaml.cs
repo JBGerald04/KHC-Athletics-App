@@ -225,7 +225,7 @@ namespace KHC_Athletics_and_House_Points
         {
             if (cbxtype.SelectedItem.ToString() != "*Event Type" && cbxdistance.SelectedItem.ToString() != "*Distance" && cbxevent.SelectedItem.ToString() != "*Event Name" && cbxheat.SelectedItem.ToString() != "*Heat" && cbxage.SelectedItem.ToString() != "*Age" && cbxgender.SelectedItem.ToString() != "*Gender")
             {
-                MySql.SearchQuery("age,gender", $"{int.Parse(cbxage.SelectedItem.ToString())},{cbxgender.SelectedItem}");
+                MySql.StudentSearchQuery("age,gender", $"{int.Parse(cbxage.SelectedItem.ToString())},{cbxgender.SelectedItem}");
                 LoadStudents();
             }
             else if (Load == true && cbxgender.SelectedIndex != 0)

@@ -5,10 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KHC_Athletics_and_House_Points"
         mc:Ignorable="d"
-        Title="Events" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+        Title="Events" Height="450" Width="800" WindowStartupLocation="CenterScreen" ShowInTaskbar="False">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
@@ -19,65 +20,27 @@
             <RowDefinition Height="20" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="auto" />
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
 
-        <!--<Button x:Name="btnBack" Content="Back" Grid.Column="1" Grid.Row="1" Margin="30, 10" Click="btnBack_Click"/>
-        <TextBlock Text="Search:" Grid.Column="2" Grid.Row="1" TextAlignment="Right" FontSize="15" Margin="0, 10"/>
-        <TextBox x:Name="tbxSearch" Grid.Column="3" Grid.Row="1" Margin="10, 10"/>
-        <Button x:Name="btnSearchGo" Content="Go" Grid.Column="4" Grid.Row="1" Margin="30, 10" Click="btnSearchGo_Click"/>-->
+        <Button x:Name="btnBack" Content="Back" Grid.Column="1" Grid.Row="1" Margin="30, 10" Click="btnBack_Click"/>
+        <TextBlock Text="Search:" Grid.Column="2" Grid.Row="1" FontSize="15" Margin="10, 10" TextAlignment="Right"/>
+        <ComboBox x:Name="cbxSearchFilter" Grid.Column="3" Grid.Row="1" Margin="10" SelectionChanged="cbxSearchFilter_SelectionChanged"/>
+        <TextBox x:Name="tbxSearch" Grid.Column="4" Grid.Row="1" Margin="10, 10" IsEnabled="False"/>
+        <Button x:Name="btnSearch" Content="Search" Grid.Column="5" Grid.Row="1" Margin="10" Click="btnSearch_Click"/>
 
-        <FlowDocumentScrollViewer Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="4">
-            <FlowDocument>
-
-                <Table Name="tblstudents" BorderBrush="Black" BorderThickness="1">
-                    <TableRowGroup>
-                        <TableRow>
-                            <TableCell>
-                                <Paragraph>
-                                    <TextBlock Text="ID"/>
-                                    <TextBlock Text="ID" />
-                                </Paragraph>
-                            </TableCell>
-                            <TableCell>
-                                <Paragraph>
-                                    <TextBlock Text="Firstname" />
-                                </Paragraph>
-                            </TableCell>
-                            <TableCell>
-                                <Paragraph>
-                                    <TextBlock Text="Lastname" />
-                                </Paragraph>
-                            </TableCell>
-                            <TableCell>
-                                <Paragraph>
-                                    <TextBlock Text="Birthday" />
-                                </Paragraph>
-                            </TableCell>
-                            <TableCell>
-                                <Paragraph>
-                                    <TextBlock Text="Age" />
-                                </Paragraph>
-                            </TableCell>
-                            <TableCell>
-                                <Paragraph>
-                                    <TextBlock Text="Gender" />
-                                </Paragraph>
-                            </TableCell>
-                            <TableCell>
-                                <Paragraph>
-                                    <TextBlock Text="House" />
-                                </Paragraph>
-                            </TableCell>
-                        </TableRow>
-                    </TableRowGroup>
-                </Table>
-            </FlowDocument>
-        </FlowDocumentScrollViewer>
-
-        <!--<Button x:Name="btnEditStudent" Content="Edit" Grid.Column="2" Grid.Row="3" Margin="10" Click="btnEditStudent_Click"/>
-        <Button x:Name="btnAddStudent" Content="Add" Grid.Column="3" Grid.Row="3" Margin="10" Click="btnAddStudent_Click"/>-->
-
+        <ListView x:Name="lstEvents" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="5">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="ID" DisplayMemberBinding="{Binding Id}"/>
+                    <GridViewColumn Header="Firstname" DisplayMemberBinding="{Binding Firstname}"/>
+                    <GridViewColumn Header="Lastname" DisplayMemberBinding="{Binding Lastname}"/>
+                    <GridViewColumn Header="Birthday" DisplayMemberBinding="{Binding Birthday}"/>
+                    <GridViewColumn Header="Age" DisplayMemberBinding="{Binding Age}"/>
+                    <GridViewColumn Header="Gender" DisplayMemberBinding="{Binding Gender}"/>
+                    <GridViewColumn Header="House" DisplayMemberBinding="{Binding House}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </Window>

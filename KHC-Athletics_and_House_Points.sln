@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.32126.315
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KHC-Athletics_and_House_Points", "KHC-Athletics_and_House_Points.csproj", "{CC8F19EA-9176-436C-BBBC-151427423607}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KHC-Athletics_and_House_Points", "KHC-Athletics_and_House_Points.csproj", "{CC8F19EA-9176-436C-BBBC-151427423607}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "KHC-Athletics-And-House_Points-System", "..\KHC-Athletics-And-House_Points-System\KHC-Athletics-And-House_Points-System.vdproj", "{D8009E82-B2DE-4DB6-AB24-98C9ACF1D2E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,8 @@ Global
 		{CC8F19EA-9176-436C-BBBC-151427423607}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC8F19EA-9176-436C-BBBC-151427423607}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC8F19EA-9176-436C-BBBC-151427423607}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8009E82-B2DE-4DB6-AB24-98C9ACF1D2E2}.Debug|Any CPU.ActiveCfg = Debug
+		{D8009E82-B2DE-4DB6-AB24-98C9ACF1D2E2}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
