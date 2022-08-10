@@ -22,6 +22,7 @@ namespace KHC_Athletics_and_House_Points
         public class Event
         {
             public int Id { get; set; }
+            public int Place { get; set; }
             public string Type { get; set; }
             public string Name { get; set; }
             public string Distance { get; set; }
@@ -33,15 +34,15 @@ namespace KHC_Athletics_and_House_Points
         public Events()
         {
             InitializeComponent();
-            MySql.SelectEvents();
-            DisplayEvents(MySql.event_count);
+            cbxSearchFilter.ItemsSource = new string[] { "id", "type", "name", "distance", "age", "gender" };
+            Refresh();
         }
 
 
-        private void DisplayEvents(int count)
+        private void DisplayEvents()
         {
             lstEvents.Items.Clear();
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < MySql.events.Count; i++)
             {
                 var events = new Event()
                 {
@@ -57,20 +58,59 @@ namespace KHC_Athletics_and_House_Points
         }
 
 
-        private void btnBack_Click(object sender, RoutedEventArgs e) { this.Close(); }
+        void Refresh()
+        {
+            MySql.SelectEvents();
+            DisplayEvents();
+        }
+
+
+        private void btnBack_Click(object sender, RoutedEventArgs e) { Close(); }
+
+
+        private void btnRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            Refresh();
+            cbxSearchFilter.SelectedItem = null;
+            tbxSearch.Text = "";
+            tbxSearch.IsEnabled = false;
+            btnSearch.IsEnabled = false;
+        }
 
 
         private void btnSearch_Click(object sender, RoutedEventArgs e)
         {
-            MySql.EventSearchQuery(cbxSearchFilter.SelectedItem.ToString(), tbxSearch.Text);
-            DisplayEvents(MySql.events.Count);
+            if (tbxSearch.Text != "")
+            {
+                MySql.EventSearchQuery(cbxSearchFilter.SelectedItem.ToString(), tbxSearch.Text);
+                DisplayEvents();
+            }
+            else { MessageBox.Show("No text was entered into the search. Please try again."); }
         }
 
 
         private void cbxSearchFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            tbxSearch.Text = "";
             tbxSearch.IsEnabled = true;
             btnSearch.IsEnabled = true;
+        }
+
+
+        private void btnAddResult_Click(object sender, RoutedEventArgs e)
+        {
+            var form = new AddResult(-1);
+            form.ShowDialog();
+            Refresh();
+        }
+
+
+        private void lstEvents_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var form = new Results(int.Parse(lstEvents.SelectedIndex.ToString()));
+            form.ShowDialog();
+            MySql.results.Clear();
+            lstEvents.SelectedItem = null;
         }
     }
 }

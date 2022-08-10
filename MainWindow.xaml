@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KHC_Athletics_and_House_Points"
         mc:Ignorable="d" FontSize="18"
-        Title="KHC Athletics and House Points System" Height="225" Width="700" FontFamily="Segoe UI Light" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None" Icon="/KHC Logo.ico">
+        Title="KHC Athletics and House Points System" Height="225" Width="700" FontFamily="Segoe UI Light" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None" Icon="/Green_KHC_Logo.jpeg">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20" />

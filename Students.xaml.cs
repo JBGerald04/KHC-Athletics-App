@@ -21,10 +21,6 @@ namespace KHC_Athletics_and_House_Points
     /// </summary>
     public partial class Students : Window
     {
-        public string[] filter_data = { "id", "firstname", "lastname", "birthday", "age", "gender", "house" };
-        int count;
-
-
         public class Student
         {
             public int Id { get; set; }
@@ -40,14 +36,15 @@ namespace KHC_Athletics_and_House_Points
         public Students()
         {
             InitializeComponent();
-            cbxSearchFilter.ItemsSource = filter_data;
+            cbxSearchFilter.ItemsSource = new string[] { "id", "firstname", "lastname", "birthday", "age", "gender", "house" };
+            Refresh();
         }
 
 
-        private void DisplayStudents(int count)
+        private void DisplayStudents()
         {
             lstStudents.Items.Clear();
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < MySql.student.Count; i++)
             {
                 var student = new Student()
                 {
@@ -62,37 +59,59 @@ namespace KHC_Athletics_and_House_Points
                 lstStudents.Items.Add(student);
             }
         }
+        
+
+        void Refresh()
+        {
+            MySql.SelectStudents();
+            DisplayStudents();
+        }
 
 
-        private void btnBack_Click(object sender, RoutedEventArgs e) { this.Close(); }
+        private void btnBack_Click(object sender, RoutedEventArgs e) { Close(); }
+
+
+        private void btnRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            Refresh();
+            cbxSearchFilter.SelectedItem = null;
+            tbxSearch.Text = "";
+            tbxSearch.IsEnabled = false;
+            btnSearch.IsEnabled = false;
+        }
 
 
         private void btnSearch_Click(object sender, RoutedEventArgs e)
         {
-            if (cbxSearchFilter.SelectedItem.ToString() == "house")
+            if (tbxSearch.Text != "")
             {
-                for (int i = 0; i < 4; i++)
+                if (cbxSearchFilter.SelectedItem.ToString() == "house")
                 {
-                    if (Sentral.houseData[i].house_name.Contains(tbxSearch.Text) == true)
+                    for (int i = 0; i < 4; i++)
                     {
-                        MySql.StudentSearchQuery($"{cbxSearchFilter.SelectedItem}_id", $"{i + 1}");
-                        DisplayStudents(MySql.student.Count);
-                        return;
+                        if (Sentral.houseData[i].house_name.Contains(tbxSearch.Text) == true)
+                        {
+                            MySql.StudentSearchQuery($"{cbxSearchFilter.SelectedItem}_id", $"{i + 1}");
+                            DisplayStudents();
+                            return;
+                        }
                     }
+                    MySql.StudentSearchQuery($"{cbxSearchFilter.SelectedItem}_id", "0");
+                    DisplayStudents();
                 }
-                MySql.StudentSearchQuery($"{cbxSearchFilter.SelectedItem}_id", "0");
-                DisplayStudents(MySql.student.Count);
+                else
+                {
+                    MySql.StudentSearchQuery(cbxSearchFilter.SelectedItem.ToString(), tbxSearch.Text);
+                    DisplayStudents();
+                }
             }
-            else
-            {
-                MySql.StudentSearchQuery(cbxSearchFilter.SelectedItem.ToString(), tbxSearch.Text);
-                DisplayStudents(MySql.student.Count);
-            }
+            else { MessageBox.Show("No text was entered into the search. Please try again."); }
         }
 
 
         private void cbxSearchFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            tbxSearch.Text = "";
             tbxSearch.IsEnabled = true;
             btnSearch.IsEnabled = true;
         }
@@ -102,8 +121,7 @@ namespace KHC_Athletics_and_House_Points
         {
             var form = new AddStudent(true);
             form.ShowDialog();
-            MySql.SelectStudents();
-            DisplayStudents(MySql.student_count);
+            Refresh();
         }
 
 
@@ -111,8 +129,7 @@ namespace KHC_Athletics_and_House_Points
         {
             var form = new AddStudent(false);
             form.ShowDialog();
-            MySql.SelectStudents();
-            DisplayStudents(MySql.student_count);
+            Refresh();
         }
 
 
@@ -123,22 +140,19 @@ namespace KHC_Athletics_and_House_Points
             if (openStudentsFile.ShowDialog() == true)
             {
                 string path = openStudentsFile.FileName;
-                LoadFile(path);
-                for (int i = 0; i < count; i++) { MySql.AddStudent(i); }
+                int count = int.Parse(LoadFile(path));
+                for (int i = 365; i < count; i++) { MySql.AddStudent(i); }
                 MessageBox.Show($"Added {count} students.");
             }
-            MySql.SelectStudents();
-            DisplayStudents(MySql.student_count);
-            tbxSearch.IsEnabled = false;
-            btnSearch.IsEnabled = false;
-            cbxSearchFilter.SelectedItem = null;
+            Refresh();
         }
 
 
-        void LoadFile(string path)
+        string LoadFile(string path)
         {
+            MySql.student.Clear();
             var file = File.OpenText(path);         // Opens the file following the path specified by the user
-            count = 0;
+            int count = 0;
             file.ReadLine();                        // Skip the headers in the file
             while (!file.EndOfStream)               // Runs until the end of the file
             {
@@ -149,7 +163,7 @@ namespace KHC_Athletics_and_House_Points
 
                 newline.firstname = data[1];        // Reads the first value on the current line
                 newline.lastname = data[2];         // Reads the seccond value on the current line
-                newline.birthday = data[3];
+                newline.birthday = DateTime.Parse(data[3]).ToString().Split(' ')[0];
                 newline.gender = data[4];
                 newline.house_id = int.Parse(data[5]);
 
@@ -158,6 +172,7 @@ namespace KHC_Athletics_and_House_Points
                 count++;
             }
             file.Close();   // Closes the file, we are finished with the file
+            return count.ToString();
         }
     }
 }

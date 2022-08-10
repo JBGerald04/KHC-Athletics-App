@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KHC_Athletics_and_House_Points"
         mc:Ignorable="d"
-        Title="Events" Height="450" Width="800" WindowStartupLocation="CenterScreen" ShowInTaskbar="False">
+        Title="Events" Height="450" Width="800" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20"/>
@@ -20,27 +20,30 @@
             <RowDefinition Height="20" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
 
-        <Button x:Name="btnBack" Content="Back" Grid.Column="1" Grid.Row="1" Margin="30, 10" Click="btnBack_Click"/>
-        <TextBlock Text="Search:" Grid.Column="2" Grid.Row="1" FontSize="15" Margin="10, 10" TextAlignment="Right"/>
+        <Button x:Name="btnBack" Content="Back" Grid.Column="1" Grid.Row="1" Margin="10" Click="btnBack_Click"/>
+        <Button x:Name="btnRefresh" Content="⟳" Grid.Column="2" Grid.Row="1" Margin="10, 10, 100, 10" Click="btnRefresh_Click"/>
+        <TextBlock Text="Search:" Grid.Column="2" Grid.Row="1" FontSize="15" Margin="90, 10, 10, 10" TextAlignment="Right"/>
         <ComboBox x:Name="cbxSearchFilter" Grid.Column="3" Grid.Row="1" Margin="10" SelectionChanged="cbxSearchFilter_SelectionChanged"/>
         <TextBox x:Name="tbxSearch" Grid.Column="4" Grid.Row="1" Margin="10, 10" IsEnabled="False"/>
-        <Button x:Name="btnSearch" Content="Search" Grid.Column="5" Grid.Row="1" Margin="10" Click="btnSearch_Click"/>
+        <Button x:Name="btnSearch" Content="Search" Grid.Column="5" Grid.Row="1" Margin="10" IsEnabled="False" Click="btnSearch_Click"/>
 
-        <ListView x:Name="lstEvents" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="5">
+        <ListView x:Name="lstEvents" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="5" SelectionChanged="lstEvents_SelectionChanged">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="ID" DisplayMemberBinding="{Binding Id}"/>
-                    <GridViewColumn Header="Firstname" DisplayMemberBinding="{Binding Firstname}"/>
-                    <GridViewColumn Header="Lastname" DisplayMemberBinding="{Binding Lastname}"/>
-                    <GridViewColumn Header="Birthday" DisplayMemberBinding="{Binding Birthday}"/>
+                    <GridViewColumn Header="Type" DisplayMemberBinding="{Binding Type}"/>
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Distance" DisplayMemberBinding="{Binding Distance}"/>
                     <GridViewColumn Header="Age" DisplayMemberBinding="{Binding Age}"/>
                     <GridViewColumn Header="Gender" DisplayMemberBinding="{Binding Gender}"/>
-                    <GridViewColumn Header="House" DisplayMemberBinding="{Binding House}"/>
                 </GridView>
             </ListView.View>
         </ListView>
+
+        <Button x:Name="btnAddResult" Content="Add Result" Grid.Column="3" Grid.Row="3" Margin="10" Click="btnAddResult_Click"/>
     </Grid>
 </Window>

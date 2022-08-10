@@ -24,16 +24,30 @@ namespace KHC_Athletics_and_House_Points
         int event_count = 0;
 
 
-        public AddResult()
+        public AddResult(int index)
         {
             InitializeComponent();
             Start();
             Load = true;
+            if (index > 0) { Edit(index); }
+            MySql.events.Clear();
         }
 
 
-        public void Start()
+        void Edit(int index)
         {
+            cbxtype.SelectedItem = MySql.events[index].type;
+            cbxevent.SelectedItem = MySql.events[index].name;
+            cbxdistance.SelectedItem = MySql.events[index].distance;
+            cbxheat.SelectedIndex = 1;
+            cbxage.SelectedItem = MySql.events[index].age.ToString();
+            cbxgender.SelectedItem = MySql.events[index].gender;
+        }
+
+
+        void Start()
+        {
+            MySql.student.Clear();
             cbxtype.ItemsSource = data_type;
             cbxevent.ItemsSource = new string[] { "*Event Name" };
             cbxdistance.ItemsSource = data_distance;
@@ -51,10 +65,12 @@ namespace KHC_Athletics_and_House_Points
 
         void LoadStudents()
         {
-            data = null;
-            data = new string[MySql.student.Count];
             if (MySql.student.Count == 0) { data = new string[] { "No results" }; }
-            else { for (int i = 0; i < MySql.student.Count; i++) { data[i] = $"{MySql.student[i].firstname} {MySql.student[i].lastname}"; } }
+            else
+            {
+                data = new string[MySql.student.Count];
+                for (int i = 0; i < MySql.student.Count; i++) { data[i] = $"{MySql.student[i].firstname} {MySql.student[i].lastname}"; }
+            }
 
             tbxtime_distance1.Text = "";
             tbxtime_distance2.Text = "";
@@ -172,7 +188,7 @@ namespace KHC_Athletics_and_House_Points
             if (cbxtype.SelectedItem.ToString() != "*Event Type" && cbxdistance.SelectedItem.ToString() != "*Distance" && cbxevent.SelectedItem.ToString() != "*Event Name" && cbxheat.SelectedItem.ToString() != "*Heat" && cbxage.SelectedItem.ToString() != "*Age" && cbxgender.SelectedItem.ToString() != "*Gender")
             {
                 bool exit = Read();
-                if (exit == true) { MessageBox.Show("Error reading results. \nEnsure that all values are filled properly eg. 05.39 NOT _5.39.\nClick submit to try again."); return; }
+                if (exit == true) { MessageBox.Show("Error reading results. \nEnsure that all values are filled properly \neg. 05.39 NOT missing values _5._9.\nClick submit to try again."); return; }
                 MySql.AddEvent(cbxtype.SelectedItem.ToString(), cbxevent.SelectedItem.ToString(), cbxdistance.SelectedItem.ToString(), int.Parse(cbxage.SelectedItem.ToString()), cbxgender.SelectedItem.ToString());
                 for (int i = 0; i < readcount; i++) { MySql.results.Add(new MySql.Results { result = Result[i], heat = int.Parse(cbxheat.SelectedItem.ToString()), event_id = MySql.events[event_count].id, student_id = MySql.student[index[i]].id }); }
                 MySql.AddResult(readcount);

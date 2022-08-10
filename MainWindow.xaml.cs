@@ -27,6 +27,7 @@ namespace KHC_Athletics_and_House_Points
             InitializeComponent();
         }
 
+
         private void btnStudents_Click(object sender, RoutedEventArgs e)
         {
             var form = new Students();
@@ -39,13 +40,11 @@ namespace KHC_Athletics_and_House_Points
         {
             var form = new Events();
             form.ShowDialog();
+            MySql.events.Clear();
         }
 
 
-        private void btnQuit_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
+        private void btnQuit_Click(object sender, RoutedEventArgs e) { this.Close(); }
 
 
         private void btnHouse_Points_Click(object sender, RoutedEventArgs e) { Process.Start("C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe", "localhost/points/"); }

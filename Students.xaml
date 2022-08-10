@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KHC_Athletics_and_House_Points"
         mc:Ignorable="d"
-        Title="Students" Height="450" Width="800" WindowStartupLocation="CenterScreen" ShowInTaskbar="False">
+        Title="Students" Height="450" Width="800" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20"/>
@@ -24,16 +24,17 @@
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
 
-        <Button x:Name="btnBack" Content="Back" Grid.Column="1" Grid.Row="1" Margin="30, 10" Click="btnBack_Click"/>
-        <TextBlock Text="Search:" Grid.Column="2" Grid.Row="1" FontSize="15" Margin="10, 10" TextAlignment="Right"/>
+        <Button x:Name="btnBack" Content="Back" Grid.Column="1" Grid.Row="1" Margin="10" Click="btnBack_Click"/>
+        <Button x:Name="btnRefresh" Content="⟳" Grid.Column="2" Grid.Row="1" Margin="10, 10, 100, 10" Click="btnRefresh_Click"/>
+        <TextBlock Text="Search:" Grid.Column="2" Grid.Row="1" FontSize="15" Margin="90, 10, 10, 10" TextAlignment="Right"/>
         <ComboBox x:Name="cbxSearchFilter" Grid.Column="3" Grid.Row="1" Margin="10" SelectionChanged="cbxSearchFilter_SelectionChanged"/>
         <TextBox x:Name="tbxSearch" Grid.Column="4" Grid.Row="1" Margin="10, 10" IsEnabled="False"/>
-        <Button x:Name="btnSearch" Content="Search" Grid.Column="5" Grid.Row="1" Margin="10" Click="btnSearch_Click"/>
+        <Button x:Name="btnSearch" Content="Search" Grid.Column="5" Grid.Row="1" Margin="10" IsEnabled="False" Click="btnSearch_Click"/>
 
         <ListView x:Name="lstStudents" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="5">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="ID" DisplayMemberBinding="{Binding Id}"/>
+                    <GridViewColumn Header="ID" Width="50" DisplayMemberBinding="{Binding Id}"/>
                     <GridViewColumn Header="Firstname" DisplayMemberBinding="{Binding Firstname}"/>
                     <GridViewColumn Header="Lastname" DisplayMemberBinding="{Binding Lastname}"/>
                     <GridViewColumn Header="Birthday" DisplayMemberBinding="{Binding Birthday}"/>
