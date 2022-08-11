@@ -141,7 +141,7 @@ namespace KHC_Athletics_and_House_Points
             {
                 string path = openStudentsFile.FileName;
                 int count = int.Parse(LoadFile(path));
-                for (int i = 365; i < count; i++) { MySql.AddStudent(i); }
+                for (int i = 0; i < count; i++) { MySql.AddStudent(i); }
                 MessageBox.Show($"Added {count} students.");
             }
             Refresh();

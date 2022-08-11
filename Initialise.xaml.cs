@@ -76,16 +76,14 @@ namespace KHC_Athletics_and_House_Points
                 var data = line.Split(':');
 
                 tbxSentral_Username.Text = data[0];
-                pbxSentral_Password.Password = data[1];
-                tbxMySql_URL.Text = data[2];
-                tbxMySql_Database.Text = data[3];
-                tbxMySql_Username.Text = data[4];
-                pbxMySql_Password.Password = data[5];
+                tbxMySql_URL.Text = data[1];
+                tbxMySql_Database.Text = data[2];
+                tbxMySql_Username.Text = data[3];
             }
             catch
             {
                 var file = File.CreateText("start.txt");
-                file.WriteLine(":::::");
+                file.WriteLine(":::");
                 file.Close();
             }
         }
@@ -96,10 +94,10 @@ namespace KHC_Athletics_and_House_Points
             string line1;
             string line2;
 
-            if (rewriteSentral == true) { line1 = $"{Program.sentral_username}:{Program.sentral_password}:"; }
-            else { line1 = "::"; }
-            if (rewriteSql == true) { line2 = $"{Program.mysql_server}:{Program.mysql_database}:{Program.mysql_username}:{Program.mysql_password}"; }
-            else { line2 = ":::"; }
+            if (rewriteSentral == true) { line1 = $"{Program.sentral_username}:"; }
+            else { line1 = ":"; }
+            if (rewriteSql == true) { line2 = $"{Program.mysql_server}:{Program.mysql_database}:{Program.mysql_username}"; }
+            else { line2 = "::"; }
             File.WriteAllLines("Start.txt", new string[] { line1 + line2 });
         }
     }

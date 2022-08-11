@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:KHC_Athletics_and_House_Points"
         mc:Ignorable="d"
         Title="AddResult" Height="500" Width="900" FontSize="15" WindowStartupLocation="CenterScreen"
-        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit">
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" Icon="/Green_KHC_Logo.jpeg">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20"/>
